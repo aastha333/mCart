@@ -68,6 +68,7 @@ const getAllProduct=async function(req,res){
     
     Product
         .find(query)
+        .populate(req.query.filter)
         .sort({[req.query.key]:req.query.value})
         .skip((perPage * page) - perPage)
         .limit(perPage)
