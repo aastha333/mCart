@@ -22,8 +22,8 @@ const _=require('lodash');
 const otpGenerator=require('otp-generator');
 const axios=require('axios');
 require("dotenv").config();
-let db=process.env.DB;
-mongoose.connect(db,{useNewUrlParser:true,useUnifiedTopology:true}).then(()=>{
+//let db=process.env.DB;
+mongoose.connect("mongodb+srv://Aastha:mqtkSMVqNXuijFDa@cluster0.9kzsa.mongodb.net/mCart?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true}).then(()=>{
     console.log('Mongo Connected!');
 })
 
