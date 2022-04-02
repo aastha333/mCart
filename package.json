@@ -1,0 +1,37 @@
+{
+  "name": "mcart",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "google-libphonenumber": "^3.2.27",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.2.8",
+    "nodemon": "^2.0.15",
+    "otp-generator": "^2.0.1",
+    "twilio": "^3.76.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aastha333/mCart.git"
+  },
+  "author": "Aastha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aastha333/mCart/issues"
+  },
+  "homepage": "https://github.com/aastha333/mCart#readme"
+}
