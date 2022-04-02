@@ -92,8 +92,8 @@ const addProduct=async function(req,res){
 const updateProduct=async function(req,res){
     try
     {
-      console.log(req.query.id);
-        await Product.findOne({_id:ObjectId(req.query.id)},{"productName":1,"baseCost":1,"discount":1,"shortDescription":1,"longDescription":1,"quantity":1,"brandName":1,"categoryName":1}).then(async (data)=>{
+     
+        await Product.findOne({_id:ObjectId(req.query.id)},{"productName":1}).then(async (data)=>{
             if(data)
             {      
                 data.productName=req.body.productName,
