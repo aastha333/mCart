@@ -24,11 +24,11 @@ const addProduct=async function(req,res){
             
             function avail(q){
                 if(q>0){
-                    console.log("1");
+                    //console.log("1");
                     return true;
                 }
                 else{
-                    console.log("0");
+                    //console.log("0");
                     return false;
                 }
             }
@@ -40,7 +40,7 @@ const addProduct=async function(req,res){
             discountedCost:(req.body.baseCost-(req.body.discount*req.body.baseCost/100)),
             shortDescription:req.body.shortDescription,
             longDescription:req.body.longDescription,
-            quantity:req.body.quantity,
+            quantity:quantity,
            
             categoryName:req.body.categoryName,
             //currency:req.body.currency,
