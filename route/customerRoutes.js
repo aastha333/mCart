@@ -18,7 +18,7 @@ router.post('/addCustomer',jsonEncoder,customer.addCustomer);
  router.post('/loginCustomer',jsonEncoder,customer.loginCustomer);
  router.post('/verifyCustomer',jsonEncoder,customer.verifyOtp);
  router.post('/addAddress',jsonEncoder,customer.addAddress);
- router.put('/updateCustomer',jsonEncoder,auth.JWT,customer.updateCustomer);
+ router.put('/updateCustomer',jsonEncoder,customer.updateCustomer);
  router.put('/deleteAddress',jsonEncoder,customer.deleteAddress);
 
 
