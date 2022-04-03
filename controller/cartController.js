@@ -89,7 +89,7 @@ const auth=require('../middleware/auth_customer')
 const addToCart = async (req, res) => {
     const cart = new Cart({
        customer:req.user._id,
-       cardItems:req.body.cardItems,
+       Items:req.body.Items,
     //   // product:req.body.product,
     //              quantity:req.body.quantity,
     //               price:req.body.price,
