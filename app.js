@@ -17,7 +17,7 @@
 const express=require('express');
 const app=express();
 const mongoose=require('mongoose');
-const routes=require('./route/routes');
+const routes=require('./route/merchantRoutes');
 const _=require('lodash');
 const otpGenerator=require('otp-generator');
 const axios=require('axios');

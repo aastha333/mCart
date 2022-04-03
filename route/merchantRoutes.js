@@ -25,7 +25,7 @@ router.get('/getProductByMerchant',jsonEncoder,auth.JWT,inventory.getProduct);
 
 router.post('/addProfile',jsonEncoder,profile.addProfile);
 router.post('/loginProfile',jsonEncoder,profile.loginProfile);
-router.get('/getProfile',jsonEncoder,profile.getProfile);
+router.get('/getProfile',jsonEncoder,auth.JWT,profile.getProfile);
 router.put('/updateProfile',jsonEncoder,auth.JWT,profile.updateProfile );
 router.delete('/deleteProfile',jsonEncoder,auth.JWT,profile.deleteProfile );
 
