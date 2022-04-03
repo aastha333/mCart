@@ -1,7 +1,8 @@
  const mongoose = require("mongoose");
 const {Product,ObjectProductId}=require('./product');
 // const {merchantProfile,ObjectId}=require('./merchantProfile');
-const {Category,ObjectCategoryId} =require("./category")
+const {Category,ObjectCategoryId} =require("./category");
+const {Customer,ObjectId}=require("../model/customerProfile")
 
 // const cartSchema = new mongoose.Schema({
 //   items: [
@@ -68,33 +69,52 @@ const {Category,ObjectCategoryId} =require("./category")
 //     ref: "customerProfile"
 //   }
 // });
-const cartSchema = new mongoose.Schema({
-customer:{ type: mongoose.Schema.Types.ObjectId,
-   ref: 'Customer',
-   required: true },
-  cartItems:
-  [
-    {
-        product:
-         { type: mongoose.Schema.Types.ObjectId,
-          ref: 'Product', required: true
-         },
-        quantity:
-        { type: Number,
-           default: 1
-          },
-         price:{type:Number},
-        // totalQty: {
-        //   type: Number,
-        //   default: 0,
-        //   required: true,
-        // },
-      }],
-totalCost: {
-  type: Number,
-  default: 0,
-  required: true,
-}
-},{timestamps:true});
+
+const Schema = mongoose.Schema;
+
+let ItemSchema = new Schema(
+  {
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: [1, "Quantity can not be less then 1."],
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    total: {
+      type: Number,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+module.exports = mongoose.model("item", ItemSchema);
+
+const CartSchema = new Schema(
+  {
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+    },
+
+    items: [ItemSchema],
+
+     total: {
+      default: 0,
+      type: Number,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model("Cart", cartSchema);
