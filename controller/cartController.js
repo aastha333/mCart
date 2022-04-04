@@ -92,7 +92,8 @@ const {Cart,ObjectCartId}=require('../model/cart');
 // }
 const addToCart = async (req, res, next) => {
 
-const { customerId, productId } = req.body;
+const customerId= req.body.customerId;
+const productId=req.body.productId;
 let data = null;
 
 const quantity = Number.parseInt(req.body.quantity);
