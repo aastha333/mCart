@@ -11,7 +11,7 @@ const jsonEncoder=bodyparser.json();
 //const profile=require('../controller/merchantController');
 //const inventory=require('../controller/inventoryController');
 const customer=require('../controller/customerController');
-const cart=require('../controller/cartController');
+//const cart=require('../controller/cartController');
 // const payment=require('../controller/paymentController')
 
 router.post('/addCustomer',jsonEncoder,customer.addCustomer);
@@ -25,6 +25,6 @@ router.post('/addCustomer',jsonEncoder,customer.addCustomer);
 // router.post('/addPayment',jsonEncoder,payment.addPayment);
 // router.get('/getPayment',jsonEncoder,payment.getPayment);
 // router.put('/updatePayment',jsonEncoder,payment.updatePayment);
-router.post('/addToCart',jsonEncoder,cart.addToCart);
+//router.post('/addToCart',jsonEncoder,cart.addToCart);
 
 module.exports=router;

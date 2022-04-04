@@ -95,11 +95,11 @@ let ItemSchema = new Schema(
     },
     baseCost: {
       type: Number,
-      required: true,
+      //required: true,
     },
     total: {
       type: Number,
-      required: true,
+      //required: true,
     },
   },
   {
