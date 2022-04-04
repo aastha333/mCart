@@ -1,8 +1,9 @@
  const mongoose = require("mongoose");
+ const { ObjectCartId }=mongoose.Types;
 const {Product,ObjectProductId}=require('./product');
 // const {merchantProfile,ObjectId}=require('./merchantProfile');
 const {Category,ObjectCategoryId} =require("./category");
-const {Customer,ObjectId}=require("../model/customerProfile")
+const {customerProfile,ObjectId}=require("../model/customerProfile")
 
 // const cartSchema = new mongoose.Schema({
 //   items: [
@@ -83,7 +84,16 @@ let ItemSchema = new Schema(
       required: true,
       min: [1, "Quantity can not be less then 1."],
     },
-    price: {
+    shortDescription:{
+      type:String
+    },
+    longDescription:{
+      type:String
+    },
+    available:{
+      type:Boolean
+    },
+    baseCost: {
       type: Number,
       required: true,
     },
@@ -96,13 +106,17 @@ let ItemSchema = new Schema(
     timestamps: true,
   }
 );
-module.exports = mongoose.model("item", ItemSchema);
+// module.exports ={
+//   item:mongoose.model("item", ItemSchema),
+//   ObjectCartId
+// }
 
-const CartSchema = new Schema(
+
+const cartSchema = new Schema(
   {
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
+      ref: "customerProfile",
     },
 
     items: [ItemSchema],
@@ -117,4 +131,7 @@ const CartSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Cart", cartSchema);
+module.exports = {
+  Cart:mongoose.model("Cart",cartSchema),
+    ObjectCartId
+}

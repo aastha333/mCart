@@ -34,7 +34,7 @@ let port= process.env.PORT||5000;
 //app.set('view engine','ejs');
 
 app.use('/mCart',merchantRoutes);
-app.use('/mCart',customerRoutes)
+//app.use('/mCart',customerRoutes)
 
 
 // app.get('/cool',function(req,res){

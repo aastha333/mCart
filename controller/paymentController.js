@@ -26,9 +26,9 @@ const addPayment=async function(req,res){
            if(data)
            {
             let name=data.firstName+" "+data.lastName;
-            let email=data.email;
+            let customerId=data._id;
             
-            let paymentid = crypto.randomBytes(20).toString('hex');
+            let paymentid = crypto.randomBytes(10).toString('hex');
             console.log(paymentid)
             if(req.body.cardNo && req.body.cardName && req.body.cardHolderName && req.body.CVV && req.body.expiryDate && (req.body.cardNo.toString().length)>=16 && (req.body.cardNo.toString().length)<=16 && req.body.CVV.toString().length>=3 && req.body.CVV.toString().length <=3)
             {  
@@ -40,7 +40,7 @@ const addPayment=async function(req,res){
                 let payment=new Payment({
                     
                     name:name,
-                    email:email,
+                    customerId:customerId,
                     cardNo:cardNo,
                     cardName:cardName,
                     cardHolderName:cardHolderName,

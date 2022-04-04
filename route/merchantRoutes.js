@@ -12,6 +12,7 @@ const product=require('../controller/productController');
 const profile=require('../controller/merchantController');
 const inventory=require('../controller/inventoryController');
 const customer=require('../controller/customerController');
+const cart=require('../controller/cartController');
 // const payment=require('../controller/paymentController')
 
 router.get('/getAllProduct',jsonEncoder,auth.JWT,inventory.getProduct);
@@ -35,7 +36,7 @@ router.delete('/deleteProfile',jsonEncoder,auth.JWT,profile.deleteProfile );
  router.post('/addAddress',jsonEncoder,customer.addAddress);
  router.put('/updateCustomer',jsonEncoder,customer.updateCustomer);
  router.put('/deleteAddress',jsonEncoder,customer.deleteAddress);
-
+ router.post('/addToCart',jsonEncoder,cart.addToCart);
 // router.post('/addPayment',jsonEncoder,payment.addPayment);
 // router.get('/getPayment',jsonEncoder,payment.getPayment);
 // router.put('/updatePayment',jsonEncoder,payment.updatePayment);
