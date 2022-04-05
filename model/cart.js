@@ -79,10 +79,19 @@ let ItemSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
     },
+    productName:{
+      type:String
+    },
     quantity: {
       type: Number,
       required: true,
       min: [1, "Quantity can not be less then 1."],
+    },
+    categoryName:{
+      type:String
+    },
+    brandName:{
+      type:String
     },
     shortDescription:{
       type:String
@@ -93,9 +102,20 @@ let ItemSchema = new Schema(
     available:{
       type:Boolean
     },
-    baseCost: {
+    price: {
       type: Number,
       //required: true,
+    },
+    size:{
+      type:String,
+      uppercase:true,
+      enum:['S','M','L','XL','XXL']
+    },
+    discountedCost:{
+      type:Number
+    },
+    discount:{
+      type:Number
     },
     total: {
       type: Number,
@@ -121,7 +141,7 @@ const cartSchema = new Schema(
 
     items: [ItemSchema],
 
-     total: {
+     subTotal: {
       default: 0,
       type: Number,
     },

@@ -130,7 +130,8 @@ const getProfile=async function(req,res){
     try
     {
         await merchantProfile.findOne({_id:ObjectId(req.query.id)}).then((data)=>{
-            if(data.length>0)
+            if(data)
+            //console.log(data);
                 res.json(data);
             else
                 res.json({data:'No Data Exist!'});

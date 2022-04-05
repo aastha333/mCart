@@ -1,5 +1,5 @@
 const bodyparser=require('body-parser');
-const {customerProfile,ObjectCustomerId}=require('../model/customerProfile');
+const {customerProfile,ObjectId}=require('../model/customerProfile');
 const {Payment,ObjectPaymentId} =require('../model/payment');
 var crypto = require("crypto");
 
@@ -28,8 +28,8 @@ const addPayment=async function(req,res){
             let name=data.firstName+" "+data.lastName;
             let customerId=data._id;
             
-            let paymentid = crypto.randomBytes(10).toString('hex');
-            console.log(paymentid)
+            let paymentId = crypto.randomBytes(6).toString('hex');
+            console.log(paymentId)
             if(req.body.cardNo && req.body.cardName && req.body.cardHolderName && req.body.CVV && req.body.expiryDate && (req.body.cardNo.toString().length)>=16 && (req.body.cardNo.toString().length)<=16 && req.body.CVV.toString().length>=3 && req.body.CVV.toString().length <=3)
             {  
                 var cardNo=req.body.cardNo;
@@ -46,9 +46,9 @@ const addPayment=async function(req,res){
                     cardHolderName:cardHolderName,
                     CVV:CVV,
                     expiryDate:expiryDate,
-                    paymentid:paymentid
+                    paymentId:paymentId
                 })
-                console.log(name);
+                //console.log(name);
                 await payment.save().then(()=>{
                     res.end('Data Saved!');
                 })
@@ -69,8 +69,8 @@ catch(error){
 const updatePayment=async function(req,res){
     try
     {
-        await Payment.findOne({paymentid:(req.query.id)},{"name":1,"email":1,"cardNo":1,"cardName":1,"cardHolderName":1,"CVV":1,"expiryDate":1,"paymentid":1}).then(async (data)=>{
-            console.log(data);
+        await Payment.findOne({paymentId:(req.query.id)},{"name":1,"email":1,"cardNo":1,"cardName":1,"cardHolderName":1,"CVV":1,"expiryDate":1,"paymentid":1}).then(async (data)=>{
+            //console.log(data);
             if(data)
             {
                 if(req.body.cardNo&& req.body.cardName && req.body.cardHolderName && req.body.CVV && req.body.expiryDate && (req.body.cardNo.toString().length)>=16 && (req.body.cardNo.toString().length)<=16 && (req.body.CVV.toString().length)>=3 &&(req.body.CVV.toString().length)<=3)
@@ -96,6 +96,7 @@ const updatePayment=async function(req,res){
         res.status(401).json({data:err.message});
     }
 }
+
 
     module.exports={
         addPayment,

@@ -2,15 +2,13 @@ const mongoose=require("mongoose")
 const { ObjectPaymentId }=mongoose.Types;
 
 const paymentSchema = new mongoose.Schema({
+    customerId:{
+        type:mongoose.Schema.Types.ObjectId,
+      ref: "customerProfile",
+    },
     name:{
         type:String,
         required:true
-    },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
     cardNo:{
         type:Number,
@@ -40,7 +38,7 @@ const paymentSchema = new mongoose.Schema({
         min:Date.now,
         required:true
     },
-    paymentid:{
+    paymentId:{
         type:String
     }
 })

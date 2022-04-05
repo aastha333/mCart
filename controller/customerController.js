@@ -4,6 +4,7 @@ const bcrypt=require('bcrypt');
 const  _ = require('lodash');
 const axios=require('axios');
 const {customerProfile,ObjectId}=require('../model/customerProfile');
+//const {Address,ObjectAddressId}=require('../model/addressCustomer')
 const {OTP,ObjectOtpId}=require('../model/otp');
 const jwt = require('jsonwebtoken');
 
@@ -27,7 +28,7 @@ const jwt = require('jsonwebtoken');
 const addCustomer=async function(req,res){  
     try
     {
-        if(req.body.firstName && req.body.lastName &&req.body.gender&&req.body.DOB&& req.body.email && req.body.mobileNo &&req.body.countryCode&& req.body.address && (req.body.mobileNo.toString().length)>=10 && (req.body.mobileNo.toString().length)<=10)
+        if(req.body.firstName && req.body.lastName &&req.body.gender&&req.body.DOB&& req.body.address&&req.body.email && req.body.mobileNo &&req.body.countryCode&& req.body.address && (req.body.mobileNo.toString().length)>=10 && (req.body.mobileNo.toString().length)<=10)
         
         {
             
@@ -49,6 +50,9 @@ const addCustomer=async function(req,res){
                 }
                 res.status(200).send(responseObj)
             })
+          
+          
+      
         }
         
         else{

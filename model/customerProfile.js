@@ -1,46 +1,8 @@
 const mongoose=require("mongoose");
+//const {Address,ObjectAddressId}=require('../model/addressCustomer')
 const { ObjectId }=mongoose.Types;
 
-const addressSchema = new mongoose.Schema({
-    // customerId:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref:'Profile'
-    // },
-            type : {
-                type: String,
-                required:true,
-                enum:['Home','Work','Others']
-            },
-            primary : {
-                type: Boolean
-            },
-            street : {
-                type: String,
-                required:true
-            },
-            Locality : {
-                type: String
-            },
-            city : {
-                type: String,
-                required:true
-            },
-            district : {
-                type: String,
-                required:true
-            },
-            state : {
-                type: String,
-                required:true
-            },
-            pinCode : {
-                type:Number,
-                minlength:6,
-                maxlength:6,
-                min:100000,
-                max:900000
-        }
-    });
+
 const customerProfileSchema = new mongoose.Schema({
     firstName:{
         type:String,
@@ -81,7 +43,44 @@ const customerProfileSchema = new mongoose.Schema({
         // validate(value){if(value.toString()){
         //     throw new Error("Enter a valid Roll no")}}
     },
-   address:[addressSchema]
+   address:[{
+    
+        type : {
+            type: String,
+            required:true,
+            enum:['Home','Work','Others']
+        },
+        primary : {
+            type: Boolean
+        },
+        street : {
+            type: String,
+            required:true
+        },
+        locality : {
+            type: String
+        },
+        city : {
+            type: String,
+            required:true
+        },
+        district : {
+            type: String,
+            required:true
+        },
+        state : {
+            type: String,
+            required:true
+        },
+        pinCode : {
+            type:Number,
+            minlength:6,
+            maxlength:6,
+            min:100000,
+            max:900000
+    }
+
+   }]
    
     // token:{
     //     type:String
