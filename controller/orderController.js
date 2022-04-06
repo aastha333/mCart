@@ -12,53 +12,23 @@ const crypto=require('crypto');
 const orderProduct=async(req,res)=>{
     try{
         var customerId=req.query.customerId;
-        var paymentId=req.body.paymentId;
+        var paymentId=req.query.paymentId;
         const addressId=req.query.addressId;
         //await customerProfile.findOne({_id:ObjectId(customerId)}).then(data=>{})
-
+        
         const cart = await Cart.findOne({ customerId: customerId});
+        
         //console.log(cart);
+        let indexFound = cart.items.findIndex(p => p.customerId == customerId);
         //await customerProfile.findOne({_id:ObjectId(customerId)}).populate("address").then({
         await Cart.deleteOne({ customerId: customerId })
         .then(()=>{
             if(cart){
-                let transId;
-                // console.log(cart.map(item=>item.items));
-                // result.populate('items').execPopulate(() => {
-                    
-                //     res.send(result);
-                // });
-
-               
-               // function transaction(cId,pId){
-
-                   var transaction = async(cId,pId)=>{
-                    
-                         await Payment.findOne({customerId:cId,paymentId:pId},{}).then(async(data)=>{
-                            if(data){
-                                var transactionid   = await crypto.randomBytes(6).toString('hex');
-                                //console.log(transactionid)
-                                transId=transactionid
-                                return transactionid
-                            }
-                            else{
-                                res.json("add Payment");
-                            }
-                            
-                            //status='Ordered'
-                        })
-                        //console.log(transactionid);
-                        //return transactionid;   
-            }
-                //let status='Ordered';
-                //let indexFound = cart.items.map(item=>it;
-                //Order.items.push({i:cart});
-                let transactionId=transaction(customerId,paymentId);
-                console.log(transId);
+                var status='Ordered'
                 const orderdata={
                 customerId:customerId,
                 items:cart.items,
-                //status:status,
+                status:status,
                 totalCost:cart.subTotal,
                 address:addressId,
                 transactionId:transactionId
@@ -66,7 +36,7 @@ const orderProduct=async(req,res)=>{
                 }
                 const order=new Order(orderdata);
                  order.save().then(()=>{
-                    res.end('Order Successfully!');
+                    res.send('Order Successfully! Please initiate Payment!');
                 })
 
             }
@@ -101,12 +71,14 @@ const updateOrderStatus=async(req,res)=>{
 }
 const cancelOrder=async(req,res)=>{
     try{
-        await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
+        await Order.findOne({_id:ObjectId(req.query.orderId),customerId:req.query.customerId}).then(async data=>{
             if(data){
+
                 data.status='Cancelled';
+                res.json("Refund Initiated")
             }
             else{
-                res.json("order is not placed")
+                res.json("No order is placed!")
             }
         })
     }
@@ -114,6 +86,7 @@ const cancelOrder=async(req,res)=>{
         res.json(err)
     }
 }
+
 
 module.exports={
    orderProduct,

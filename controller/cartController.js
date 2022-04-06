@@ -125,6 +125,21 @@ return res.status(200).send({
       res.json(err)
 }
 }
+const getCart=async (req,res)=>{
+    try{
+        await Cart.findOne({customerId:ObjectId(req.query.customerId)}).then((data)=>{
+            if(data){
+                res.json(data);
+            }
+            else{
+                res.json("Cart is Empty!");
+            }
+        })
+    }
+    catch(err){
+        res.json(err)
+    }
+}
 const deleteFromCart = async(req, res) => {
   try{
   await Cart.findOneAndUpdate({customerId : ObjectId(req.query.customerId)}, { $pull: { items : {productId: ObjectId(req.query.productId) }}}, {multi: true}).then(data=>{
@@ -146,9 +161,20 @@ const deleteFromCart = async(req, res) => {
       res.json(err)
     }
 }
+const emptyCart=async function(req,res){
+        try{
+            await Cart.findOneAndDelete({customerId:ObjectId(req.query.customerId)}).then((data)=>{
+                res.json("Successfully Deleted!");
+            })
+        }
+        catch(err){
+            res.json(err)
+        }
+}
 
       module.exports={
          addToCart,
          deleteFromCart,
-         updateQuantity
+         updateQuantity,
+         emptyCart
      }

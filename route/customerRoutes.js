@@ -17,10 +17,14 @@ const cart=require('../controller/cartController');
 
 router.post('/addCustomer',jsonEncoder,customer.addCustomer);
  router.post('/loginCustomer',jsonEncoder,customer.loginCustomer);
- router.post('/verifyCustomer',jsonEncoder,customer.verifyOtp);
- router.post('/addAddress',jsonEncoder,customer.addAddress);
+ router.post('/verifyOtp',jsonEncoder,customer.verifyOtp);
+ router.put('/addAddress',jsonEncoder,customer.addAddress);
+ router.put('/updateAddress',jsonEncoder,customer.updateAddress);
  router.put('/updateCustomer',jsonEncoder,customer.updateCustomer);
  router.put('/deleteAddress',jsonEncoder,customer.deleteAddress);
+ router.get('/getCustomerById',jsonEncoder,customer.getCustomerById);
+ router.delete('/deleteCustomer',jsonEncoder,customer.deleteCustomer);
+ router.get('/getCustomer',jsonEncoder,customer.getCustomer);
 
 
  router.post('/addPayment',jsonEncoder,payment.addPayment);

@@ -8,22 +8,23 @@ const {customerProfile,ObjectId}=require('../model/customerProfile');
 const {OTP,ObjectOtpId}=require('../model/otp');
 const jwt = require('jsonwebtoken');
 
-// const getUser=async function(req,res){
-//     try
-//     {
-//         await User.find().then((result)=>{
-//             if(result.length>0)
-//                 res.json(result);
-//             else
-//                 res.json({result:"No Data Exist!"});
-//         })
-//     }
-//     catch(error)
-//     {
-//         res.status(401).json(error.message);
-//     }
+const getCustomer=async function(req,res){
+    try
+    {
+        await customerProfile.find().then((result)=>{
+            if(result)
+                res.json(result);
+            else
+                res.json({result:"No Data Exist!"});
+        })
+    }
+    catch(error)
+    {
+        res.status(401).json(error.message);
+    }
     
-// }
+}
+
 
 const addCustomer=async function(req,res){  
     try
@@ -69,7 +70,7 @@ const addAddress= async function(req,res){
         await customerProfile.findOneAndUpdate({_id:ObjectId(req.query.id)},
             
             { $push: { address:req.body.address  } },
-            {upsert:true}).then(data=>{
+            ).then(data=>{
                 responseObj = {
                     "status": "success",
                     "msg": "Record found.",
@@ -100,11 +101,11 @@ const deleteAddress=async function(req,res){
 }
 const updateAddress=async function(req,res){
     try{
-        await customerProfile.Update({_id:ObjectId(req.query.Id)},{ 'address': { $elemMatch: { '_id': req.body.id}}},
-         { $set: {"address": req.body.address}})
+        await customerProfile.findOneAndUpdate({_id:ObjectId(req.query.Id)},{'address._id':ObjectId(req.query.addressId)},
+         { $set: {'address.$': req.body.address}})
     }
     catch{
-
+        res.send(err);
     }
 }
 const loginCustomer=async function(req,res){
@@ -114,7 +115,7 @@ const loginCustomer=async function(req,res){
                 digits:true,alphabets:false,upperCase:false,specialChars:false
             });
             const number=req.body.mobileNo;
-            console.log(Otp);
+            res.json(Otp);
             const otp=new OTP({
                 number:number,
                 Otp:Otp
@@ -200,11 +201,11 @@ const verifyOtp= (req,res)=>
         
 
 
-const getCustomer=async function(req,res){
+const getCustomerById=async function(req,res){
     try
     {
         await customerProfile.findOne({_id:ObjectId(req.query.id)}).then((data)=>{
-            if(data.length>0)
+            if(data)
                 res.json(data);
             else
                 res.json({data:'No Data Exist!'});
@@ -215,6 +216,7 @@ const getCustomer=async function(req,res){
         res.status(401).json({data:err.message});
     }
 }
+
 
 const updateCustomer=async function(req,res){
     try
@@ -229,7 +231,7 @@ const updateCustomer=async function(req,res){
                     data.gender=req.body.gender;
                     data.DOB=req.body.DOB;
                     data.mobileNo=req.body.mobileNo;
-                    data.address=req.body.address;
+                    //data.address=req.body.address;
 
                     await data.save().then((data)=>{
                         res.json(data);
@@ -266,11 +268,13 @@ const deleteCustomer=async function(req,res){
 }
 module.exports={
         addCustomer,
-        getCustomer,
+        getCustomerById,
         loginCustomer,
         updateCustomer,
         deleteCustomer,
         verifyOtp,
         addAddress,
-        deleteAddress
+        deleteAddress,
+        updateAddress,
+        getCustomer
     }
