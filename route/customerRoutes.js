@@ -30,7 +30,7 @@ router.post('/addCustomer',jsonEncoder,customer.addCustomer);
  router.post('/addPayment',jsonEncoder,payment.addPayment);
  router.get('/getPayment',jsonEncoder,payment.getPayment);
  router.put('/updatePayment',jsonEncoder,payment.updatePayment);
- //router.delete('/deletePayment',jsonEncoder,payment.deletePayment);
+ router.delete('/deletePayment',jsonEncoder,payment.deletePayment);
 router.post('/addToCart',jsonEncoder,cart.addToCart);
 router.put('/deleteFromCart',jsonEncoder,cart.deleteFromCart);
 router.put('/updateQuantity',jsonEncoder,cart.updateQuantity);

@@ -6,8 +6,15 @@ const { Order,ObjectOrderId } = require('../model/order');
 const {Payment,ObjectPaymentId}=require('../model/payment')
 //const crypto=require('crypto');
 const cart=async(req,res)=>{
-    const data=await Cart.findOne({customerId:customerId});
-    res.json(data);
+    await Cart.findOne({customerId:req.query.customerId}).then((data)=>{
+        if(data){
+            res.json(data);
+        }
+        else{
+            res.json("Add to Cart")
+        }
+    })
+  
 }
 
 const orderProduct=async(req,res)=>{
@@ -18,7 +25,7 @@ const orderProduct=async(req,res)=>{
         
        const data = await Cart.findOne({ customerId: customerId});
        
-        console.log(data);
+        //console.log(data);
         
         await Cart.deleteOne({ customerId: customerId })
         .then((result)=>{
@@ -73,7 +80,7 @@ const updateOrderStatus=async(req,res)=>{
 }
 const cancelOrder=async(req,res)=>{
     try{
-        await Order.findOne({_id:ObjectId(req.query.orderId),customerId:req.query.customerId}).then(async data=>{
+        await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
             if(data){
 
                 data.status='Cancelled';

@@ -21,7 +21,7 @@ const orderSchema=new mongoose.Schema({
         ref:'customerProfile'
         //required: true,
       },
-      transactionid: {
+      transactionId: {
         type: String,
         //required: true,
       },

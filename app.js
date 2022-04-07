@@ -19,7 +19,8 @@ const app=express();
 const mongoose=require('mongoose');
 const merchantRoutes=require('./route/merchantRoutes');
 const customerRoutes=require('./route/customerRoutes');
-const orderRoutes=require('./route/orderRoutes')
+const orderRoutes=require('./route/orderRoutes');
+const adminRoutes=require('./route/adminRoutes');
 const _=require('lodash');
 const otpGenerator=require('otp-generator');
 const axios=require('axios');
@@ -37,6 +38,7 @@ let port= process.env.PORT||5000;
 app.use('/mCart',merchantRoutes);
 app.use('/mcart',customerRoutes);
 app.use('/',orderRoutes)
+app.use('/',adminRoutes)
 
 
 // app.get('/cool',function(req,res){

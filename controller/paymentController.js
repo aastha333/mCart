@@ -96,10 +96,26 @@ const updatePayment=async function(req,res){
         res.status(401).json({data:err.message});
     }
 }
+const deletePayment=async(req,res)=>{
+   
+        try
+        {
+            await Payment.deleteOne({paymentId:(req.query.id)}).then((result)=>{
+                if(result)
+                    res.json(result);
+                else
+                res.json({result:'No Data Exist!'});
+            })
+        }
+        catch(error){
+            res.status(401).json({data:error.message});
+        }
+    }
 
 
     module.exports={
         addPayment,
         getPayment,
-        updatePayment
+        updatePayment,
+        deletePayment
     }
