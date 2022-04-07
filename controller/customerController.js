@@ -111,6 +111,7 @@ const updateAddress=async function(req,res){
 const loginCustomer=async function(req,res){
    try{
         await customerProfile.findOne({mobileNo:req.body.mobileNo}).then(async(data)=>{
+            if(data){
             const Otp=otpGenerator.generate(6,{
                 digits:true,alphabets:false,upperCase:false,specialChars:false
             });
@@ -130,8 +131,11 @@ const loginCustomer=async function(req,res){
                     data:data
                 });
             });
-            
-        })
+        }
+    else{
+        res.json("Customer doesn't exist");
+        }
+    })
 
    }
     catch{

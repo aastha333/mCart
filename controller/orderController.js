@@ -1,12 +1,12 @@
 const bodyparser=require('body-parser');
 //const { status } = require('express/lib/response');
 const { Cart,ObjectCartId } = require('../model/cart');
-const { ObjectId } = require('../model/customerProfile');
+const { customerProfile, ObjectId } = require('../model/customerProfile');
 //const { customerProfile,ObjectId } = require('../model/customerProfile');
 const { Order,ObjectOrderId } = require('../model/order');
 const {Payment,ObjectPaymentId}=require('../model/payment')
 //const crypto=require('crypto');
-const cart=async(req,res)=>{
+const getCart=async(req,res)=>{
     await Cart.findOne({customerId:req.query.customerId}).then((data)=>{
         if(data){
             res.json(data);
@@ -102,5 +102,5 @@ module.exports={
    orderProduct,
    updateOrderStatus,
    cancelOrder,
-   cart
+  getCart
 }
