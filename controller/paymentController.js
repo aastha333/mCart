@@ -115,8 +115,8 @@ const deletePayment=async(req,res)=>{
 const makePayment=async(req,res)=>{
     try{
         await Order.findOneAndUpdate({orderId:ObjectId(req.query.orderId)}).then(async(data)=>{
-            if(data){
-                await Payment.findOne({paymentId:req.query.paymentId},{customerId:customerId}).then((result)=>{
+            if(data&&data.status=='Payment Incomplete'){
+                await Payment.findOne({paymentId:req.query.paymentId},{customerId:req.query.customerId}).then((result)=>{
                     if(result){ 
                      let transactionid = crypto.randomBytes(6).toString('hex');
                      data.transactionId=transactionid;
@@ -135,6 +135,15 @@ const makePayment=async(req,res)=>{
     }
     catch(err){
         res.json(err)
+    }
+}
+const refundPayment=async(req,res)=>{
+    try{
+        await Order.findOne({_id:req.query.orderId},{productId:req.query.productId})
+
+    }
+    catch(err){
+
     }
 }
 

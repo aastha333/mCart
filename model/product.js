@@ -25,10 +25,14 @@ const productSchema = new mongoose.Schema({
         type:Number
     },
     shortDescription:{
-        type:String
+        type:String,
+        minlength:50,
+        maxlength:100
     },
     longDescription:{
-        type:String
+        type:String,
+        minlength:200,
+        maxlength:800
     },
     quantity:{
         type:Number

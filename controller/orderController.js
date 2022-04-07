@@ -32,7 +32,7 @@ const orderProduct=async(req,res)=>{
         .then((result)=>{
             if(result){
                 
-                var transactionId='Pay to Confirm Order';
+                var transactionId='';
                 var status='Payment Incomplete'
                 //var status='Ordered'
                 const orderdata={
@@ -65,7 +65,7 @@ const orderProduct=async(req,res)=>{
 const updateOrderStatus=async(req,res)=>{
     try{
         await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
-            if(data){
+            if(data&&(data.status=='Ordered'||data.status=='Shipped'||data.status=='Packed'||data.status=='Delivered'||data.status=='Cancelled'||data.status=='Refund Proceeding')){
             data.status=req.body.status;
             await data.save().then((result)=>{
                 res.json(result)
@@ -83,7 +83,7 @@ const updateOrderStatus=async(req,res)=>{
 const cancelOrder=async(req,res)=>{
     try{
         await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
-            if(data){
+            if(data&&(data.status=='Ordered'||data.status=='Packed'||data.status=='Shipped'||data.status=='Delivered')){
 
                 data.status='Cancelled';
                 res.json("Refund Initiated")
@@ -97,11 +97,25 @@ const cancelOrder=async(req,res)=>{
         res.json(err)
     }
 }
-
+const cancelOneProduct=async(req,res)=>{
+    try{
+        await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
+            if(data){
+                
+            }
+            else{
+                res.json("You haven't order")
+            }
+        })
+    }
+    catch(err){
+        res.json(err)
+    }
+}
 
 module.exports={
    orderProduct,
    updateOrderStatus,
    cancelOrder,
-  getCart
+   getCart
 }
