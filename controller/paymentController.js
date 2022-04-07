@@ -21,7 +21,7 @@ const getPayment=async function(req,res){
 
 const addPayment=async function(req,res){
     try{
-        await customerProfile.findOne({_id:ObjectId(req.query.id)},{"firstName":1,"lastName":1,"email":1}).then(async (data)=>
+        await customerProfile.findOne({_id:ObjectId(req.query.id)}).then(async (data)=>
        {
            if(data)
            {
