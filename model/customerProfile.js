@@ -34,7 +34,7 @@ const customerProfileSchema = new mongoose.Schema({
         unique:true,
         match:[/^[6789]\d{9}$/,"Please enter a valid mobile no"]
     },
-    CountryCode:{
+    countryCode:{
         type:String,
         match:[/^([+]\d{2}[ ])$/]
     },
