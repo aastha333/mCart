@@ -4,7 +4,8 @@ const { ObjectOtpId }=mongoose.Types;
 const OTPSchema = new mongoose.Schema({
     number:{
         type:Number,
-        required:true
+        required:true,
+        match:[/^[6789]\d{9}$/,"Please enter a valid mobile no"]
     },
     Otp:{
         type:String,

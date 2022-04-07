@@ -148,7 +148,7 @@ const verifyOtp= (req,res)=>
         OTP.find({ number:req.body.number})
         .exec()
         .then(data=>
-            {
+            {   
                 if(data.length<1)
                 {
                     return res.status(401).json({

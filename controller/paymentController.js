@@ -2,6 +2,7 @@ const bodyparser=require('body-parser');
 const {customerProfile,ObjectId}=require('../model/customerProfile');
 const {Payment,ObjectPaymentId} =require('../model/payment');
 var crypto = require("crypto");
+const { Order } = require('../model/order');
 
 const getPayment=async function(req,res){
     try
@@ -111,11 +112,35 @@ const deletePayment=async(req,res)=>{
             res.status(401).json({data:error.message});
         }
     }
-
+const makePayment=async(req,res)=>{
+    try{
+        await Order.findOneAndUpdate({orderId:ObjectId(req.query.orderId)}).then(async(data)=>{
+            if(data){
+                await Payment.findOne({paymentId:req.query.paymentId},{customerId:customerId}).then((result)=>{
+                    if(result){ 
+                     let transactionid = crypto.randomBytes(6).toString('hex');
+                     data.transactionId=transactionid;
+                    }
+                    else{
+                        res.json("Please enter vaild Payment ID")
+                    }
+                  
+                })
+            }
+            else{
+                res.json('Order is not Placed')
+            }
+        })
+    }
+    catch(err){
+        res.json(err)
+    }
+}
 
     module.exports={
         addPayment,
         getPayment,
         updatePayment,
-        deletePayment
+        deletePayment,
+        makePayment
     }

@@ -8,13 +8,15 @@ const customerProfileSchema = new mongoose.Schema({
         type:String,
         required:true,
         minlength:2,
-        maxlength:20
+        maxlength:20,
+        match:[/^[a-z .'-]+$/i,"Enter valid first name"]
     },
     lastName:{
         type:String,
         required:true,
         minlength:2,
-        maxlength:20
+        maxlength:20,
+        match:[/^[a-z .'-]+$/i,"Enter valid last name"]
     },
     gender:{
         type:String,
