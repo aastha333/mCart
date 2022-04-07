@@ -45,7 +45,8 @@ const orderProduct=async(req,res)=>{
 
                 }
                 const order=new Order(orderdata);
-                 order.save().then(()=>{
+                 order.save().then((data)=>{
+                     res.json(data);
                     res.send('Please initiate Payment to confirm Order!');
                 })
 

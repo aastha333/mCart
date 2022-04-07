@@ -120,6 +120,7 @@ const makePayment=async(req,res)=>{
                     if(result){ 
                      let transactionid = crypto.randomBytes(6).toString('hex');
                      data.transactionId=transactionid;
+                     data.status='Ordered'
                     }
                     else{
                         res.json("Please enter vaild Payment ID")

@@ -32,11 +32,11 @@ const customerProfileSchema = new mongoose.Schema({
         type:Number,
         required:true,
         unique:true,
-        match:[/^[6789]\d{9}$/,"Please enter a valid mobile no"]
+        match:[/^[6-9][0-9]{9}$/,"Please enter a valid mobile no"]
     },
     countryCode:{
         type:String,
-        match:[/^([+]\d{2}[ ])$/]
+        match: [/^(\+?\d{1,3}|\d{1,4})$/gm,"Please enter a valid country code"]
     },
     email:{
         type:String,
