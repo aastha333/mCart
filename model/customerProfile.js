@@ -26,7 +26,7 @@ const customerProfileSchema = new mongoose.Schema({
     DOB:{
         type:Date,
         min:'01-01-1967',
-        max:Date.now
+        max:'01-01-2002'
     },
     mobileNo:{
         type:Number,
@@ -36,6 +36,7 @@ const customerProfileSchema = new mongoose.Schema({
     },
     CountryCode:{
         type:String,
+        match:[/^([+]\d{2}[ ])$/]
     },
     email:{
         type:String,
