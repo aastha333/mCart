@@ -29,7 +29,7 @@ const addPayment=async function(req,res){
             let customerId=data._id;
             
             let paymentId = crypto.randomBytes(6).toString('hex');
-            console.log(paymentId)
+            //console.log(paymentId)
             if(req.body.cardNo && req.body.cardName && req.body.cardHolderName && req.body.CVV && req.body.expiryDate && (req.body.cardNo.toString().length)>=16 && (req.body.cardNo.toString().length)<=16 && req.body.CVV.toString().length>=3 && req.body.CVV.toString().length <=3)
             {  
                 var cardNo=req.body.cardNo;
@@ -69,7 +69,7 @@ catch(error){
 const updatePayment=async function(req,res){
     try
     {
-        await Payment.findOne({paymentId:(req.query.id)},{"name":1,"email":1,"cardNo":1,"cardName":1,"cardHolderName":1,"CVV":1,"expiryDate":1,"paymentid":1}).then(async (data)=>{
+        await Payment.findOne({paymentId:(req.query.id)},{"cardNo":1,"cardName":1,"cardHolderName":1,"CVV":1,"expiryDate":1,"paymentid":1}).then(async (data)=>{
             //console.log(data);
             if(data)
             {
