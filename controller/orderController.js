@@ -1,47 +1,49 @@
 const bodyparser=require('body-parser');
-const { status } = require('express/lib/response');
+//const { status } = require('express/lib/response');
 const { Cart,ObjectCartId } = require('../model/cart');
-const { customerProfile,ObjectId } = require('../model/customerProfile');
+//const { customerProfile,ObjectId } = require('../model/customerProfile');
 const { Order,ObjectOrderId } = require('../model/order');
 const {Payment,ObjectPaymentId}=require('../model/payment')
-const crypto=require('crypto');
-//const { pid } = require('process');
-//const cart = require('../model/cart');
-//const { ObjectId } = require('../model/merchantProfile');
+//const crypto=require('crypto');
+const cart=async(req,res)=>{
+    const data=await Cart.findOne({customerId:customerId});
+    res.json(data);
+}
 
 const orderProduct=async(req,res)=>{
     try{
         var customerId=req.query.customerId;
-        var paymentId=req.query.paymentId;
         const addressId=req.query.addressId;
-        //await customerProfile.findOne({_id:ObjectId(customerId)}).then(data=>{})
+       
         
-        const cart = await Cart.findOne({ customerId: customerId});
+       const data = await Cart.findOne({ customerId: customerId});
+       
+        console.log(data);
         
-        //console.log(cart);
-        let indexFound = cart.items.findIndex(p => p.customerId == customerId);
-        //await customerProfile.findOne({_id:ObjectId(customerId)}).populate("address").then({
         await Cart.deleteOne({ customerId: customerId })
-        .then(()=>{
-            if(cart){
-                var status='Ordered'
+        .then((result)=>{
+            if(result){
+                
+                var transactionId='Pay to Confirm Order';
+                var status='Payment Incomplete'
+                //var status='Ordered'
                 const orderdata={
                 customerId:customerId,
-                items:cart.items,
+                items:data.items,
                 status:status,
-                totalCost:cart.subTotal,
+                totalCost:data.subTotal,
                 address:addressId,
                 transactionId:transactionId
 
                 }
                 const order=new Order(orderdata);
                  order.save().then(()=>{
-                    res.send('Order Successfully! Please initiate Payment!');
+                    res.send('Please initiate Payment to confirm Order!');
                 })
 
             }
             else{
-                res.json("Add to cart");
+                res.json("Add to Cart to Order");
             }
             
         })
@@ -91,5 +93,6 @@ const cancelOrder=async(req,res)=>{
 module.exports={
    orderProduct,
    updateOrderStatus,
-   cancelOrder
+   cancelOrder,
+   cart
 }

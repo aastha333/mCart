@@ -9,4 +9,5 @@ const order=require('../controller/orderController');
 
 router.post('/orderProduct',jsonEncoder,order.orderProduct);
 router.put('/updateOrderStatus',jsonEncoder,order.updateOrderStatus);
+router.get('/cart',jsonEncoder,order.cart)
 module.exports=router;
