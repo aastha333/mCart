@@ -85,13 +85,13 @@ const updateOrderStatus=async(req,res)=>{
 const cancelOrder=async(req,res)=>{
     try{
         await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
-            if(data){
+            if(data&&data.status!='Payment Incomplete'&&data.status!='Cancelled'&&data.status!='Refund Proceeding'&&data.status!='Refunded'){
 
                var status='Cancelled';
                 data.status=status;
                 data.save().then((result)=>{
                     res.json("Refund Initiated")
-                    res.json(result)
+                    //res.json(result)
                 })
                 
             }

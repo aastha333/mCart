@@ -143,7 +143,14 @@ const makePayment=async(req,res)=>{
 }
 const refundPayment=async(req,res)=>{
     try{
-        await Order.findOne({_id:req.query.orderId},{productId:req.query.productId})
+        await Order.findOne({_id:req.query.orderId}).then((data)=>{
+            if(data&&data.status=='Cancelled'){
+                data.status='Refund Proceeding'
+                data.save().then((data)=>{
+                    //res.json('')
+                })
+            }
+        })
 
     }
     catch(err){
