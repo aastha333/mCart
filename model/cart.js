@@ -87,11 +87,13 @@ let ItemSchema = new Schema(
       required: true,
       min: 1
     },
-    categoryName:{
-      type:String
+    brandId:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'Brand'
     },
-    brandName:{
-      type:String
+    categoryId:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'Category'
     },
     shortDescription:{
       type:String

@@ -1,4 +1,5 @@
 const bodyparser=require('body-parser');
+const { result } = require('lodash');
 //const { status } = require('express/lib/response');
 const { Cart,ObjectCartId } = require('../model/cart');
 const { customerProfile, ObjectId } = require('../model/customerProfile');
@@ -88,7 +89,11 @@ const cancelOrder=async(req,res)=>{
 
                var status='Cancelled';
                 data.status=status;
-                res.json("Refund Initiated")
+                data.save().then((result)=>{
+                    res.json("Refund Initiated")
+                    res.json(result)
+                })
+                
             }
             else{
                 res.json("No order is placed!")

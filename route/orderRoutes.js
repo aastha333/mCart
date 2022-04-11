@@ -20,7 +20,8 @@ router.put('/makePayment',jsonEncoder,auth.JWT,payment.makePayment);
 router.post('/addToCart',jsonEncoder,auth.JWT,cart.addToCart);
 router.put('/deleteFromCart',jsonEncoder,auth.JWT,cart.deleteFromCart);
 //router.put('/updateQuantity',jsonEncoder,cart.updateQuantity);
-router.put('/getCart',jsonEncoder,auth.JWT,cart.getCart)
+router.put('/getCart',jsonEncoder,auth.JWT,cart.getCart);
+router.delete('/emptyCart',jsonEncoder,auth.JWT,cart.emptyCart)
 
 router.post('/orderProduct',jsonEncoder,auth.JWT,order.orderProduct);
 router.put('/updateOrderStatus',jsonEncoder,auth.JWT,order.updateOrderStatus);

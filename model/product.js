@@ -36,7 +36,8 @@ const productSchema = new mongoose.Schema({
         min:0
     },
     brandId:{
-        type:String
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Brand'
     },
     categoryId:{
         type:mongoose.Schema.Types.ObjectId,
