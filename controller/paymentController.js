@@ -114,7 +114,7 @@ const deletePayment=async(req,res)=>{
     }
 const makePayment=async(req,res)=>{
     try{
-        await Order.findOneAndUpdate({orderId:ObjectId(req.query.orderId),customerId:req.query.customerId}).then(async(data)=>{
+        await Order.findOneAndUpdate({_id:ObjectId(req.query.orderId),customerId:req.query.customerId}).then(async(data)=>{
             if(data&&data.status=='Payment Incomplete'){
                 await Payment.findOne({paymentId:req.query.paymentId},{customerId:req.query.customerId}).then((result)=>{
                     if(result){ 
