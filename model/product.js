@@ -32,7 +32,8 @@ const productSchema = new mongoose.Schema({
         maxlength:500
     },
     quantity:{
-        type:Number
+        type:Number,
+        min:0
     },
     brandId:{
         type:String
