@@ -76,8 +76,8 @@ if (cart){
             size:productDetails.size,
             shortDescription: productDetails.shortDescription,
             longDescription: productDetails.longDescription,
-            categoryName:productDetails.categoryName,
-            brandName:productDetails.brandName,
+            categoryId:productDetails.categoryId,
+            brandId:productDetails.brandId,
             available:productDetails.available,
             total: parseInt(productDetails.discountedCost * quantity),
         })
@@ -108,8 +108,8 @@ else {
             
             shortDescription:productDetails.shortDescription,
             longDescription:productDetails.longDescription,
-            categoryName:productDetails.categoryName,
-            brandName:productDetails.brandName,
+            categoryId:productDetails.categoryId,
+            brandId:productDetails.brandId,
             available:productDetails.available
             //note: note
             
