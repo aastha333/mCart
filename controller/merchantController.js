@@ -23,6 +23,7 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
                 DOB:req.body.DOB,
                 mobileNo:req.body.mobileNo,
                 countryCode:req.body.countryCode,
+                role:req.body.role,
                 email:req.body.email,
                 address:req.body.address,
                
@@ -129,7 +130,7 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
 const getProfile=async function(req,res){
     try
     {
-        await merchantProfile.findOne({_id:ObjectId(req.query.id)}).then((data)=>{
+        await merchantProfile.findOne({_id:ObjectId(req.query.merchantId)}).then((data)=>{
             if(data)
             //console.log(data);
                 res.json(data);
@@ -155,7 +156,7 @@ const getProfile=async function(req,res){
 const updateProfile=async function(req,res){
     try
     {
-        await merchantProfile.findOne({_id:ObjectId(req.query.id)}).then(async (data)=>{
+        await merchantProfile.findOne({_id:ObjectId(req.query.merchantId)}).then(async (data)=>{
             if(data)
             {
                 if(!req.body.email)
@@ -207,7 +208,7 @@ const updateProfile=async function(req,res){
 const deleteProfile=async function(req,res){
     try
     {
-        await merchantProfile.deleteOne({_id:ObjectId(req.query.id)}).then((result)=>{
+        await merchantProfile.deleteOne({_id:ObjectId(req.query.merchantId)}).then((result)=>{
             if(result)
                 res.json(result);
             else

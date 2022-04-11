@@ -22,7 +22,7 @@ const getPayment=async function(req,res){
 
 const addPayment=async function(req,res){
     try{
-        await customerProfile.findOne({_id:ObjectId(req.query.id)}).then(async (data)=>
+        await customerProfile.findOne({_id:ObjectId(req.query.customerId)}).then(async (data)=>
        {
            if(data)
            {
@@ -70,7 +70,7 @@ catch(error){
 const updatePayment=async function(req,res){
     try
     {
-        await Payment.findOne({paymentId:(req.query.id)},{"cardNo":1,"cardName":1,"cardHolderName":1,"CVV":1,"expiryDate":1,"paymentid":1}).then(async (data)=>{
+        await Payment.findOne({paymentId:(req.query.paymentId)},{cardNo:1,"cardName":1,"cardHolderName":1,"CVV":1,"expiryDate":1,"paymentid":1}).then(async (data)=>{
             //console.log(data);
             if(data)
             {
@@ -101,7 +101,7 @@ const deletePayment=async(req,res)=>{
    
         try
         {
-            await Payment.deleteOne({paymentId:(req.query.id)}).then((result)=>{
+            await Payment.deleteOne({paymentId:(req.query.paymentId)}).then((result)=>{
                 if(result)
                     res.json(result);
                 else
@@ -143,7 +143,7 @@ const refundPayment=async(req,res)=>{
 
     }
     catch(err){
-
+        res.json(err)
     }
 }
 
@@ -152,5 +152,6 @@ const refundPayment=async(req,res)=>{
         getPayment,
         updatePayment,
         deletePayment,
-        makePayment
+        makePayment,
+        refundPayment
     }

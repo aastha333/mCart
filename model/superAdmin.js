@@ -1,5 +1,5 @@
 const mongoose=require("mongoose")
-const { ObjectAdminId }=mongoose.Types;
+const { ObjectId }=mongoose.Types;
 
 // const Roles=Object.freeze({
 
@@ -21,10 +21,10 @@ const adminSchema = new mongoose.Schema({
         required: true,
         minlength:8
     },
-    // role:{
-    //     type:String,
-    //     enum:Object.values(Roles),
-    // },
+    role:{
+        type:String,
+        enum:['Super Admin','Add Merchant','Update Merchant','Delete Merchant','Get Merchant'],
+    },
     token:{
         type:String
     }
@@ -36,5 +36,5 @@ const adminSchema = new mongoose.Schema({
 module.exports=
 {
     Admin:mongoose.model("Admin",adminSchema),
-    ObjectAdminId
+    ObjectId
 }

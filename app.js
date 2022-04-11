@@ -21,6 +21,7 @@ const merchantRoutes=require('./route/merchantRoutes');
 const customerRoutes=require('./route/customerRoutes');
 const orderRoutes=require('./route/orderRoutes');
 const adminRoutes=require('./route/adminRoutes');
+const productRoutes=require('./route/productRoutes');
 const _=require('lodash');
 const otpGenerator=require('otp-generator');
 const axios=require('axios');
@@ -35,10 +36,11 @@ let port= process.env.PORT||5000;
 
 //app.set('view engine','ejs');
 
-app.use('/mCart',merchantRoutes);
-app.use('/mcart',customerRoutes);
-app.use('/',orderRoutes)
-app.use('/',adminRoutes)
+app.use('/',merchantRoutes);
+app.use('/',customerRoutes);
+app.use('/',orderRoutes);
+app.use('/',adminRoutes);
+app.use('/',productRoutes);
 
 
 // app.get('/cool',function(req,res){

@@ -105,12 +105,12 @@ const getAllProduct=async function(req,res){
         //         previous="null"
         //     }
             
-          await Product.find({_id:ObjectId(req.query.id)})
+          await Product.find({_id:ObjectId(req.query.productId)})
           
             // .skip((perPage * page) - perPage)
             // .limit(perPage)
             .then((data)=>{
-                if(data.length>0)
+                if(data)
                     res.send({
                         "status": "true",
                         "msg": "Record found.",
@@ -145,11 +145,11 @@ const getAllProduct=async function(req,res){
         //     previous="null"
         // }
         
-          await Product.find({MerchantId:Object(req.query.id)},{"productName":1,"baseCost":1,"discountedCost":1,"shortDescription":1,"longDescription":1,"quantity":1,"categoryName":1,"brandName":1})
+          await Product.find({MerchantId:(req.query.merchantId)})
             // .skip((perPage * page) - perPage)
             // .limit(perPage)
             .then((data)=>{
-              if(data.length>0)
+              if(data)
                 res.send({
                     "status": "true",
                     "msg": "Record found.",

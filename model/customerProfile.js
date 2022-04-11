@@ -20,13 +20,13 @@ const customerProfileSchema = new mongoose.Schema({
     },
     gender:{
         type:String,
-        enum:['Male','Female','Transgender','Not prefer to say'],
+        enum:['Male','Female','Transgender','male','female','transgender','Not prefer to say'],
         required:true
     },
     DOB:{
         type:Date,
-        min:'01-01-1967',
-        max:'01-01-2002'
+        min:Date.now-100,
+        max:Date.now-18
     },
     mobileNo:{
         type:Number,

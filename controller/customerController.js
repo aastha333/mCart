@@ -7,6 +7,9 @@ const {customerProfile,ObjectId}=require('../model/customerProfile');
 //const {Address,ObjectAddressId}=require('../model/addressCustomer')
 const {OTP,ObjectOtpId}=require('../model/otp');
 const jwt = require('jsonwebtoken');
+const category = require('../model/category');
+const { Category } = require('../model/category');
+const { Brand } = require('../model/brand');
 
 const getCustomer=async function(req,res){
     try
@@ -28,7 +31,7 @@ const getCustomer=async function(req,res){
 
 const addCustomer=async function(req,res){  
     try
-    {
+    {   //await Brand.findOne({_id:ObjectId(req.body.brandId)})
         if(req.body.firstName && req.body.lastName &&req.body.gender&&req.body.DOB&& req.body.address&&req.body.email && req.body.mobileNo &&req.body.countryCode&& req.body.address && (req.body.mobileNo.toString().length)>=10 && (req.body.mobileNo.toString().length)<=10)
         
         {
@@ -67,7 +70,7 @@ const addCustomer=async function(req,res){
 const addAddress= async function(req,res){
     try{
        
-        await customerProfile.findOneAndUpdate({_id:ObjectId(req.query.id)},
+        await customerProfile.findOneAndUpdate({_id:ObjectId(req.query.customerId)},
             
             { $push: { address:req.body.address  } },
             ).then(data=>{
@@ -86,7 +89,7 @@ const addAddress= async function(req,res){
 }
 const deleteAddress=async function(req,res){
     try{
-       await customerProfile.updateOne({_id:ObjectId(req.query.Id)},{$pull: {address:{_id:ObjectId(req.query.id)} }}, 
+       await customerProfile.updateOne({_id:ObjectId(req.query.customerId)},{$pull: {address:{_id:ObjectId(req.query.addressId)} }}, 
     {multi: true}).then(data=>{
         responseObj = {
             "status": "success",
@@ -101,10 +104,13 @@ const deleteAddress=async function(req,res){
 }
 const updateAddress=async function(req,res){
     try{
-        await customerProfile.findOneAndUpdate({_id:ObjectId(req.query.Id)},{'address._id':ObjectId(req.query.addressId)},
-         { $set: {'address.$': req.body.address}})
+        var address=req.body.address;
+        await customerProfile.updateOne({'address._id':(req.query.addressId)},
+         { $set: {'address.$': address}}).then((data)=>{
+             res.json(data);
+         })
     }
-    catch{
+    catch(err){
         res.send(err);
     }
 }
@@ -208,7 +214,7 @@ const verifyOtp= (req,res)=>
 const getCustomerById=async function(req,res){
     try
     {
-        await customerProfile.findOne({_id:ObjectId(req.query.id)}).then((data)=>{
+        await customerProfile.findOne({_id:ObjectId(req.query.customerId)}).then((data)=>{
             if(data)
                 res.json(data);
             else
@@ -225,7 +231,7 @@ const getCustomerById=async function(req,res){
 const updateCustomer=async function(req,res){
     try
     {
-        await customerProfile.findOne({_id:ObjectId(req.query.id)}).then(async (data)=>{
+        await customerProfile.findOne({_id:ObjectId(req.query.customerId)}).then(async (data)=>{
             if(data)
             {
                 if(!req.body.email)
@@ -259,7 +265,7 @@ const updateCustomer=async function(req,res){
 const deleteCustomer=async function(req,res){
     try
     {
-        await customerProfile.deleteOne({_id:ObjectId(req.query.id)}).then((result)=>{
+        await customerProfile.deleteOne({_id:ObjectId(req.query.customerId)}).then((result)=>{
             if(result)
                 res.json(result);
             else

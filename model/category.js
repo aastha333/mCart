@@ -5,10 +5,7 @@ const categorySchema = new mongoose.Schema({
     categoryName:{
         type:String,
         required:true
-    },
-    brandName:[
-        {type:String}
-    ]
+    }
 })
 
 module.exports=

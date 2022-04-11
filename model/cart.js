@@ -85,7 +85,7 @@ let ItemSchema = new Schema(
     quantity: {
       type: Number,
       required: true,
-      min: [1, "Quantity can not be less then 1."],
+      min: 1
     },
     categoryName:{
       type:String
@@ -102,25 +102,30 @@ let ItemSchema = new Schema(
     available:{
       type:Boolean
     },
-    price: {
+
+    baseCost: {
       type: Number,
       //required: true,
+    },
+    discount:{
+      type:Number,
+
+    },
+    discountedCost:{
+      type:Number
     },
     size:{
       type:String,
       uppercase:true,
       enum:['S','M','L','XL','XXL']
     },
-    discountedCost:{
-      type:Number
-    },
-    discount:{
-      type:Number
-    },
+    
+    
     total: {
       type: Number,
       //required: true,
     },
+   
   },
   {
     timestamps: true,

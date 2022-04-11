@@ -31,13 +31,14 @@ const orderProduct=async(req,res)=>{
         await Cart.deleteOne({ customerId: customerId })
         .then((result)=>{
             if(result){
-                
+                var item=data.items
                 var transactionId='';
                 var status='Payment Incomplete'
                 //var status='Ordered'
                 const orderdata={
                 customerId:customerId,
-                items:data.items,
+                items:item,
+                    
                 status:status,
                 totalCost:data.subTotal,
                 address:addressId,
@@ -83,9 +84,10 @@ const updateOrderStatus=async(req,res)=>{
 const cancelOrder=async(req,res)=>{
     try{
         await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
-            if(data&&(data.status=='Ordered'||data.status=='Packed'||data.status=='Shipped'||data.status=='Delivered')){
+            if(data){
 
-                data.status='Cancelled';
+               var status='Cancelled';
+                data.status=status;
                 res.json("Refund Initiated")
             }
             else{
@@ -97,25 +99,27 @@ const cancelOrder=async(req,res)=>{
         res.json(err)
     }
 }
-const cancelOneProduct=async(req,res)=>{
-    try{
-        await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async data=>{
-            if(data){
-                
-            }
-            else{
-                res.json("You haven't order")
-            }
-        })
-    }
-    catch(err){
-        res.json(err)
-    }
-}
+// const cancelOneProduct=async(req,res)=>{
+//     try{
+//         await Order.updateOne({'items.productId':(req.query.productId)},
+//         { $set: {'items.status': 'Cancelled'}}).then(async data=>{
+//             if(data){
+//                 res.json("Refund Initiated")
+//             }
+//             else{
+//                 res.json("You haven't order")
+//             }
+//         })
+//     }
+//     catch(err){
+//         res.json(err)
+//     }
+// }
 
 module.exports={
    orderProduct,
    updateOrderStatus,
    cancelOrder,
-   getCart
+   getCart,
+   //cancelOneProduct
 }

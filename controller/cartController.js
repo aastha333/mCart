@@ -54,6 +54,7 @@ const productDetails = await Product.findById(productId);
 //console.log("cartDetails", cart)
 
 //-- Check if cart Exists and Check the quantity if items -------
+if(productDetails.quantity>quantity){
 if (cart){
     let indexFound = cart.items.findIndex(p => p.productId == productId);
     //console.log("Index", indexFound)
@@ -61,7 +62,7 @@ if (cart){
     if (indexFound != -1) {
         cart.items[indexFound].quantity = parseInt(cart.items[indexFound].quantity + quantity);
         cart.items[indexFound].total = parseInt(cart.items[indexFound].quantity * productDetails.discountedCost);
-        cart.items[indexFound].price = productDetails.baseCost
+        cart.items[indexFound].baseCost = productDetails.baseCost
         cart.subTotal = parseInt(cart.items.map(item => item.total).reduce((acc, curr) => acc + curr));
     }
     //----Check if Quantity is Greater than 0 then add item to items Array ----
@@ -70,7 +71,7 @@ if (cart){
             productId: productId,
             productName:productDetails.productName,
             quantity: quantity,
-            price: productDetails.baseCost,
+            baseCost: productDetails.baseCost,
             discountedCost: productDetails.discountedCost,
             size:productDetails.size,
             shortDescription: productDetails.shortDescription,
@@ -100,8 +101,11 @@ else {
             productId: productId,
             productName:productDetails.productName,
             quantity: quantity,
+            baseCost: productDetails.baseCost,
+            discountedCost: productDetails.discountedCost,
+            discount: productDetails.discount,
             total: parseInt(productDetails.discountedCost* quantity),
-            price: productDetails.baseCost,
+            
             shortDescription:productDetails.shortDescription,
             longDescription:productDetails.longDescription,
             categoryName:productDetails.categoryName,
@@ -110,7 +114,7 @@ else {
             //note: note
             
         }],
-        subTotal: (productDetails.discountedCost * quantity)
+        subTotal:parseInt(productDetails.discountedCost * quantity)
     }
     cart = new Cart(cartData);
     data = await cart.save();
@@ -121,7 +125,12 @@ return res.status(200).send({
     message: "Add to Cart successfully!",
     data: data
 });
-}catch(err){
+}
+else{
+    res.json("Product is not available")
+}
+}
+catch(err){
       res.json(err)
 }
 }
@@ -152,11 +161,24 @@ const deleteFromCart = async(req, res) => {
   };
   const updateQuantity=async function(req,res){
     try{
-        await Cart.findOneAndUpdate({customerId:ObjectId(req.query.customerId)},{ items:{ productId: req.query.productId}},
-        {$inc: {"items.$.quantity": req.query.add}}).then(data=>{
-           data.save();
+        const cart=await Cart.findOne({customerId:req.query.customerId})
+        console.log(cart)
+        //quant=Number(cart.quantity)
+        //console.log(typeof (quant))
+        //quantity=Number(quant+Number(req.query.add))
+        //total=(quantity*cart.discountedCost)
+        if(cart.customerId==req.query.customerId){
+                await Cart.updateOne( { 'items.productId': req.query.productId},
+            {$set:{'items.$.quantity':req.query.add,'items.$.total':parseInt(Number.parseInt(req.query.add)*parseInt(cart.discountedCost))}}).then(result=>{
+           //data.save()
+           res.json(result)
          })
-    }
+            }
+            else{
+                res.json("Cart is empty")
+            }
+            
+        }
     catch(err){
       res.json(err)
     }
@@ -176,5 +198,6 @@ const emptyCart=async function(req,res){
          addToCart,
          deleteFromCart,
          updateQuantity,
-         emptyCart
+         emptyCart,
+         getCart
      }

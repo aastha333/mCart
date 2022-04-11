@@ -5,10 +5,26 @@ const {customerProfile,ObjectCustomerId}=require('../model/customerProfile');
 const bodyparser=require('body-parser');
 const jsonEncoder=bodyparser.json();
 const {Order,ObjectOrderId}=require('../model/order');
-const order=require('../controller/orderController');
+const auth=require('../middleware/auth_customer')
 
-router.post('/orderProduct',jsonEncoder,order.orderProduct);
-router.put('/updateOrderStatus',jsonEncoder,order.updateOrderStatus);
-router.put('/cancelOrder',jsonEncoder,order.cancelOrder)
-router.get('/getCart',jsonEncoder,order.getCart)
+const order=require('../controller/orderController');
+const cart=require('../controller/cartController');
+const payment=require('../controller/paymentController')
+
+router.post('/addPayment',jsonEncoder,auth.JWT,payment.addPayment);
+router.get('/getPayment',jsonEncoder,auth.JWT,payment.getPayment);
+router.put('/updatePayment',jsonEncoder,auth.JWT,payment.updatePayment);
+router.delete('/deletePayment',jsonEncoder,auth.JWT,payment.deletePayment);
+router.put('/makePayment',jsonEncoder,auth.JWT,payment.makePayment);
+
+router.post('/addToCart',jsonEncoder,auth.JWT,cart.addToCart);
+router.put('/deleteFromCart',jsonEncoder,auth.JWT,cart.deleteFromCart);
+//router.put('/updateQuantity',jsonEncoder,cart.updateQuantity);
+router.put('/getCart',jsonEncoder,auth.JWT,cart.getCart)
+
+router.post('/orderProduct',jsonEncoder,auth.JWT,order.orderProduct);
+router.put('/updateOrderStatus',jsonEncoder,auth.JWT,order.updateOrderStatus);
+router.put('/cancelOrder',jsonEncoder,auth.JWT,order.cancelOrder);
+//router.put('/cancelOneProduct',jsonEncoder,order.cancelOneProduct)
+router.get('/getCart',jsonEncoder,auth.JWT,order.getCart)
 module.exports=router;

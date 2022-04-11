@@ -1,13 +1,10 @@
 const mongoose=require("mongoose")
 const { ObjectProductId } = mongoose.Types;
 const {merchantProfile,ObjectId}=require('../model/merchantProfile');
-//const {Category,ObjectCategoryId} =require('../model/category')
+const {Category,ObjectCategoryId} =require('../model/category')
 
 const productSchema = new mongoose.Schema({
-    // // categoryId:{
-    // //     type:mongoose.SchemaType.ObjectId,
-    // //     ref:'Category'
-    // // },
+    
     productName:{
         type:String,
         required:true
@@ -26,30 +23,30 @@ const productSchema = new mongoose.Schema({
     },
     shortDescription:{
         type:String,
-        minlength:50,
+        minlength:10,
         maxlength:100
     },
     longDescription:{
         type:String,
-        minlength:200,
-        maxlength:800
+        minlength:50,
+        maxlength:500
     },
     quantity:{
         type:Number
     },
-    brandName:{
+    brandId:{
         type:String
+    },
+    categoryId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Category'
     },
     size:{
         type:String,
         uppercase:true,
         enum:['S','M','L','XL','XXL','NA']
     },
-  
-    categoryName:{
-        type:String,
-        required:true
-    },
+
     available: {
         type: Boolean,
         required: true,
@@ -59,9 +56,7 @@ const productSchema = new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
-    MerchantName:{
-        type:String
-    },
+   
     MerchantId: {
         type: mongoose.Schema.Types.ObjectId,
         ref:'merchantProfile'

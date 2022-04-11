@@ -21,8 +21,8 @@ const merchantProfileSchema = new mongoose.Schema({
     },
     DOB:{
         type:Date,
-        min:'01-01-1967',
-        max:Date.now
+        min:Date.now-100,
+        max:Date.now-18
     },
     mobileNo:{
         type:Number,
@@ -81,6 +81,9 @@ const merchantProfileSchema = new mongoose.Schema({
                 max:900000
         }
     }],
+    role:{
+        type:String
+    },
     password:{
         type:String,
         required: true,

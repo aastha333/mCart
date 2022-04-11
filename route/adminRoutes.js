@@ -8,8 +8,10 @@ const router=express.Router();
 const admin=require('../controller/superAdmin');
 const bodyparser=require('body-parser');
 const jsonEncoder=bodyparser.json();
-router.get('/getAdmin',jsonEncoder,admin.getAdmin);
+
 router.post('/addAdmin',jsonEncoder,admin.addAdmin);
 router.post('/loginAdmin',jsonEncoder,admin.loginAdmin);
+router.put('/updateAdmin',jsonEncoder,admin.updateAdmin);
+router.delete('/deleteAdmin',jsonEncoder,admin.deleteAdmin);
 
 module.exports=router;

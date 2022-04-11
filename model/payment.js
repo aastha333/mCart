@@ -22,7 +22,8 @@ const paymentSchema = new mongoose.Schema({
     },
     cardHolderName:{
         type:String,
-        required:true
+        required:true,
+        uppercase:true
     },
     CVV:{
         type:Number,
