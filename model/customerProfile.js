@@ -25,8 +25,8 @@ const customerProfileSchema = new mongoose.Schema({
     },
     DOB:{
         type:Date,
-        min:Date.now-100,
-        max:Date.now-18
+        min:Date.now()-100,
+        max:Date.now()-18
     },
     mobileNo:{
         type:Number,
