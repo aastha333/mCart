@@ -7,7 +7,7 @@ const { Order } = require('../model/order');
 const getPayment=async function(req,res){
     try
     {
-        await Payment.find().then((result)=>{
+        await Payment.findOne({customerId:req.query.customerId}).then((result)=>{
             if(result)
                 res.json(result);
             else
