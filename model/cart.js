@@ -121,7 +121,9 @@ let ItemSchema = new Schema(
       uppercase:true,
       enum:['S','M','L','XL','XXL']
     },
-    
+    status:{
+      type:String
+    },
     
     total: {
       type: Number,

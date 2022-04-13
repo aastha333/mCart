@@ -60,10 +60,10 @@ const orderSchema=new mongoose.Schema({
           type: Number,
           //required: true,
         },
+        status:{
+          type:String
+        },
         
-      },
-      {
-        timestamps: true,
       }],
       totalCost:{
         type:Number,
@@ -84,7 +84,10 @@ const orderSchema=new mongoose.Schema({
        },
      
      
-    })
+    },
+    {
+      timestamps: true,
+    },)
 module.exports=
 {
     Order:mongoose.model("Order",orderSchema),

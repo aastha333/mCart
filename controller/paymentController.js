@@ -8,7 +8,7 @@ const getPayment=async function(req,res){
     try
     {
         await Payment.find().then((result)=>{
-            if(result>0)
+            if(result)
                 res.json(result);
             else
                 res.json({result:"No Data Exist!"});

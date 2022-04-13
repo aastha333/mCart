@@ -34,7 +34,7 @@ const orderProduct=async(req,res)=>{
             if(result){
                 var item=data.items
                 var transactionId='';
-                var status='Payment Incomplete'
+                var status='Payment Incomplete';
                 //var status='Ordered'
                 const orderdata={
                 customerId:customerId,
@@ -104,27 +104,42 @@ const cancelOrder=async(req,res)=>{
         res.json(err)
     }
 }
-// const cancelOneProduct=async(req,res)=>{
-//     try{
-//         await Order.updateOne({'items.productId':(req.query.productId)},
-//         { $set: {'items.status': 'Cancelled'}}).then(async data=>{
-//             if(data){
-//                 res.json("Refund Initiated")
-//             }
-//             else{
-//                 res.json("You haven't order")
-//             }
-//         })
-//     }
-//     catch(err){
-//         res.json(err)
-//     }
-// }
+ const cancelOneProduct=async(req,res)=>{
+    try{
+        const productId=req.query.productId;
+         var Status='Cancelled';
+         console.log(Status);
+         const order=await Order.findOne({_id:ObjectId(req.query.orderId)});
+         console.log(order);
+         //,{'items.productId':(req.query.productId)},
+        // { $set: {'items.status': status}}).then(async data=>{
+        //     if(data){
+        //         res.json("Refund Initiated")
+        //     }
+        //     else{
+        //         res.json("You haven't order")
+        //     }
+        // })
+        Order.findOne({_id:ObjectId(req.query.orderId)}).then(data => {
+            let indexFound = order.items.findIndex(p => p.productId == productId);
+            if(indexFound!=-1){
+                order.items[indexFound].status=Status;
+            }
+            else{
+                res.json("can't set status");
+            }
+
+         });
+    }
+    catch(err){
+        res.json("error")
+    }
+}
 
 module.exports={
    orderProduct,
    updateOrderStatus,
    cancelOrder,
    getCart,
-   //cancelOneProduct
+   cancelOneProduct
 }
