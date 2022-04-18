@@ -5,14 +5,11 @@ const {Product,ObjectProductId}=require('../model/product');
 const {customerProfile,ObjectId} =require("../model/customerProfile")
 
 const orderSchema=new mongoose.Schema({
-    customerId: {
+    customer: {
         type:mongoose.Schema.Types.ObjectId,
         ref: "customerProfile",
     },
-    // customerName:{
-    //      type:String
-    //  },
-     
+    
     items: 
         [{   productId: {
           type: mongoose.Schema.Types.ObjectId,

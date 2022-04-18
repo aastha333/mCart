@@ -4,18 +4,19 @@ const {merchantProfile,ObjectId}=require('../model/merchantProfile');
 const {Product,ObjectProductId}=require('../model/product');
 const {customerProfile,ObjectCustomerId}=require('../model/customerProfile');
  const auth = require('../middleware/auth_admin');
+ const Auth=require('../middleware/auth_merchant')
 const bodyparser=require('body-parser');
 const jsonEncoder=bodyparser.json();
 
 
 const profile=require('../controller/merchantController');
 
-
+router.get('/getMerchant',jsonEncoder,auth.JWT,profile.getMerchant)
 router.post('/addProfile',jsonEncoder,auth.JWT,profile.addProfile);
-router.post('/loginProfile',jsonEncoder,auth.JWT,profile.loginProfile);
-router.get('/getProfile',jsonEncoder,auth.JWT,profile.getProfile);
-router.put('/updateProfile',jsonEncoder,auth.JWT,profile.updateProfile );
-router.delete('/deleteProfile',jsonEncoder,auth.JWT,profile.deleteProfile );
+router.post('/loginProfile',jsonEncoder,profile.loginProfile);
+router.get('/getProfileById',jsonEncoder,Auth.JWT,profile.getProfile);
+router.put('/updateProfile',jsonEncoder,Auth.JWT,profile.updateProfile );
+router.delete('/deleteProfile',jsonEncoder,Auth.JWT,profile.deleteProfile );
 
 //  router.post('/addCustomer',jsonEncoder,customer.addCustomer);
 //  router.post('/loginCustomer',jsonEncoder,customer.loginCustomer);

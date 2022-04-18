@@ -10,20 +10,21 @@ const jsonEncoder=bodyparser.json();
 
 //const product=require('../controller/productController');
 //const profile=require('../controller/merchantController');
-//const inventory=require('../controller/inventoryController');
+const inventory=require('../controller/inventoryController');
 const customer=require('../controller/customerController');
 
 
 router.post('/addCustomer',jsonEncoder,customer.addCustomer);
  router.post('/loginCustomer',jsonEncoder,customer.loginCustomer);
  router.post('/verifyOtp',jsonEncoder,customer.verifyOtp);
- router.put('/addAddress',jsonEncoder,customer.addAddress);
- router.put('/updateAddress',jsonEncoder,customer.updateAddress);
- router.put('/updateCustomer',jsonEncoder,customer.updateCustomer);
- router.put('/deleteAddress',jsonEncoder,customer.deleteAddress);
- router.get('/getCustomerById',jsonEncoder,customer.getCustomerById);
- router.delete('/deleteCustomer',jsonEncoder,customer.deleteCustomer);
+ router.put('/addAddress',jsonEncoder,auth.JWT,customer.addAddress);
+ router.put('/updateAddress',jsonEncoder,auth.JWT,customer.updateAddress);
+ router.put('/updateCustomer',jsonEncoder,auth.JWT,customer.updateCustomer);
+ router.put('/deleteAddress',jsonEncoder,auth.JWT,customer.deleteAddress);
+ router.get('/getCustomerById',jsonEncoder,auth.JWT,customer.getCustomerById);
+ router.delete('/deleteCustomer',jsonEncoder,auth.JWT,customer.deleteCustomer);
  router.get('/getCustomer',jsonEncoder,customer.getCustomer);
+ router.get('/showProductToCustomer',jsonEncoder,auth.JWT,inventory.showProductToCustomer);
 
 
 

@@ -20,12 +20,13 @@ router.put('/makePayment',jsonEncoder,auth.JWT,payment.makePayment);
 router.post('/addToCart',jsonEncoder,auth.JWT,cart.addToCart);
 router.put('/deleteFromCart',jsonEncoder,auth.JWT,cart.deleteFromCart);
 //router.put('/updateQuantity',jsonEncoder,cart.updateQuantity);
-router.put('/getCart',jsonEncoder,auth.JWT,cart.getCart);
+//router.put('/getCart',jsonEncoder,auth.JWT,cart.getCart);
 router.delete('/emptyCart',jsonEncoder,auth.JWT,cart.emptyCart)
 
 router.post('/orderProduct',jsonEncoder,auth.JWT,order.orderProduct);
 router.put('/updateOrderStatus',jsonEncoder,auth.JWT,order.updateOrderStatus);
 router.put('/cancelOrder',jsonEncoder,auth.JWT,order.cancelOrder);
-router.put('/cancelOneProduct',jsonEncoder,order.cancelOneProduct)
-router.get('/getCart',jsonEncoder,auth.JWT,order.getCart)
+router.put('/cancelOneProduct',jsonEncoder,order.cancelOneProduct);
+router.get('/getCart',jsonEncoder,auth.JWT,order.getCart);
+router.get('/orderHistory',jsonEncoder,auth.JWT,order.orderHistory);
 module.exports=router;

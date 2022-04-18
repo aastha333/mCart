@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const category = require('../model/category');
 const { Category } = require('../model/category');
 const { Brand } = require('../model/brand');
+const { load } = require('nodemon/lib/config');
 
 const getCustomer=async function(req,res){
     try
@@ -70,7 +71,7 @@ const addCustomer=async function(req,res){
 const addAddress= async function(req,res){
     try{
        
-        await customerProfile.findOneAndUpdate({_id:ObjectId(req.query.customerId)},
+        await customerProfile.findOneAndUpdate({_id:ObjectId(req.customer)},
             
             { $push: { address:req.body.address  } },
             ).then(data=>{
@@ -89,7 +90,7 @@ const addAddress= async function(req,res){
 }
 const deleteAddress=async function(req,res){
     try{
-       await customerProfile.updateOne({_id:ObjectId(req.query.customerId)},{$pull: {address:{_id:ObjectId(req.query.addressId)} }}, 
+       await customerProfile.updateOne({_id:ObjectId(req.customer)},{$pull: {address:{_id:ObjectId(req.query.addressId)} }}, 
     {multi: true}).then(data=>{
         responseObj = {
             "status": "success",
@@ -105,7 +106,7 @@ const deleteAddress=async function(req,res){
 const updateAddress=async function(req,res){
     try{
         var address=req.body.address;
-        await customerProfile.updateOne({'address._id':(req.query.addressId)},
+        await customerProfile.updateOne({_id:ObjectId(req.customer)},{'address._id':(req.query.addressId)},
          { $set: {'address.$': address}}).then((data)=>{
              res.json(data);
          })
@@ -116,6 +117,8 @@ const updateAddress=async function(req,res){
 }
 const loginCustomer=async function(req,res){
    try{
+       await OTP.findOne({number:req.body.mobileNo}).then(async(result)=>{
+        if(!result){
         await customerProfile.findOne({mobileNo:req.body.mobileNo}).then(async(data)=>{
             if(data){
             const Otp=otpGenerator.generate(6,{
@@ -142,6 +145,12 @@ const loginCustomer=async function(req,res){
         res.json("Customer doesn't exist");
         }
     })
+}
+else{
+    res.json('OTP is not expired! Please try again after it expires or try last OTP.')
+}
+       })
+      
 
    }
     catch{
@@ -154,7 +163,7 @@ const verifyOtp= (req,res)=>
         OTP.find({ number:req.body.number})
         .exec()
         .then(data=>
-            {   
+            { console.log(value)  
                 if(data.length<1)
                 {
                     return res.status(401).json({
@@ -173,7 +182,8 @@ const verifyOtp= (req,res)=>
                         {
                             const token =jwt.sign({
                                 //name:data[0].name,
-                                number:data[0].number,
+                                id:value._id
+                                //number:data[0].number,
                             },
                             privateKey,
                             {
@@ -212,11 +222,13 @@ const verifyOtp= (req,res)=>
 
 
 const getCustomerById=async function(req,res){
+    //console.log(req.customer)
     try
     {
-        await customerProfile.findOne({_id:ObjectId(req.query.customerId)}).then((data)=>{
+        await customerProfile.findById(req.customer).then((data)=>{
+            //console.log(data);
             if(data)
-                res.json(data);
+                {res.json(data);}
             else
                 res.json({data:'No Data Exist!'});
         })
@@ -231,7 +243,7 @@ const getCustomerById=async function(req,res){
 const updateCustomer=async function(req,res){
     try
     {
-        await customerProfile.findOne({_id:ObjectId(req.query.customerId)}).then(async (data)=>{
+        await customerProfile.findOne({_id:ObjectId(req.customer)}).then(async (data)=>{
             if(data)
             {
                 if(!req.body.email)
@@ -265,7 +277,7 @@ const updateCustomer=async function(req,res){
 const deleteCustomer=async function(req,res){
     try
     {
-        await customerProfile.deleteOne({_id:ObjectId(req.query.customerId)}).then((result)=>{
+        await customerProfile.deleteOne({_id:ObjectId(req.customer)}).then((result)=>{
             if(result)
                 res.json(result);
             else

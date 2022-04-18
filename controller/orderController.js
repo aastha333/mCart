@@ -8,7 +8,7 @@ const { Order,ObjectOrderId } = require('../model/order');
 const {Payment,ObjectPaymentId}=require('../model/payment')
 //const crypto=require('crypto');
 const getCart=async(req,res)=>{
-    await Cart.findOne({customerId:req.query.customerId}).then((data)=>{
+    await Cart.findOne({customerId:req.customer}).then((data)=>{
         if(data){
             res.json(data);
         }
@@ -21,7 +21,7 @@ const getCart=async(req,res)=>{
 
 const orderProduct=async(req,res)=>{
     try{
-        var customerId=req.query.customerId;
+        var customerId=req.customer;
         const addressId=req.query.addressId;
        
         
@@ -90,7 +90,10 @@ const cancelOrder=async(req,res)=>{
                var status='Cancelled';
                 data.status=status;
                 data.save().then((result)=>{
-                    res.json("Refund Initiated")
+                    res.json({
+                        response:"Refund Initiated",
+                        data:result
+                    })
                     //res.json(result)
                 })
                 
@@ -135,11 +138,22 @@ const cancelOrder=async(req,res)=>{
         res.json("error")
     }
 }
+const orderHistory=async(req,res)=>{
+    await Order.findOne({customerId:req.customer}).then((data)=>{
+        if(data){
+            res.json(data)
+        }
+        else{
+            res.json("Nothing Ordered")
+        }
+    })
+}
 
 module.exports={
    orderProduct,
    updateOrderStatus,
    cancelOrder,
    getCart,
-   cancelOneProduct
+   cancelOneProduct,
+   orderHistory
 }

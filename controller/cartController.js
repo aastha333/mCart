@@ -43,29 +43,26 @@ const {Cart,ObjectCartId}=require('../model/cart');
 
 const addToCart = async (req, res, next) => {
 try{
-const customerId= req.body.customerId;
-const productId=req.body.productId;
+const customerId= req.customer;
+const productId=req.query.productId;
 let data = null;
 
-const quantity = Number.parseInt(req.body.quantity);
+const quantity = Number.parseInt(req.query.quantity);
 
 let cart = await Cart.findOne({ customerId: customerId}); 
 const productDetails = await Product.findById(productId);
-//console.log("cartDetails", cart)
 
-//-- Check if cart Exists and Check the quantity if items -------
 if(productDetails.quantity>quantity){
 if (cart){
     let indexFound = cart.items.findIndex(p => p.productId == productId);
-    //console.log("Index", indexFound)
-    //----------check if product exist,just add the previous quantity with the new quantity and update the total price-------
+    
     if (indexFound != -1) {
         cart.items[indexFound].quantity = parseInt(cart.items[indexFound].quantity + quantity);
         cart.items[indexFound].total = parseInt(cart.items[indexFound].quantity * productDetails.discountedCost);
         cart.items[indexFound].baseCost = productDetails.baseCost
         cart.subTotal = parseInt(cart.items.map(item => item.total).reduce((acc, curr) => acc + curr));
     }
-    //----Check if Quantity is Greater than 0 then add item to items Array ----
+  
     else if (quantity > 0) {
         cart.items.push({
             productId: productId,
@@ -83,7 +80,7 @@ if (cart){
         })
         cart.subTotal = parseInt(cart.items.map(item => item.total).reduce((acc, curr) => acc + curr));
     }
-    //----if quantity of price is 0 throw the error -------
+  
     else {
         return res.status(400).json({
             code: 400,
@@ -93,7 +90,7 @@ if (cart){
 
     data = await cart.save();
 }
-//------if there is no user with a cart then it creates a new cart and then adds the item to the cart that has been created---------
+
 else {
     const cartData = {
         customerId: customerId,
@@ -111,7 +108,7 @@ else {
             categoryId:productDetails.categoryId,
             brandId:productDetails.brandId,
             available:productDetails.available
-            //note: note
+           
             
         }],
         subTotal:parseInt(productDetails.discountedCost * quantity)
@@ -136,7 +133,7 @@ catch(err){
 }
 const getCart=async (req,res)=>{
     try{
-        await Cart.findOne({customerId:ObjectId(req.query.customerId)}).then((data)=>{
+        await Cart.findOne({customerId:ObjectId(req.customer)}).then((data)=>{
             if(data){
                 res.json(data);
             }
@@ -151,8 +148,8 @@ const getCart=async (req,res)=>{
 }
 const deleteFromCart = async(req, res) => {
   try{
-  await Cart.findOneAndUpdate({customerId : ObjectId(req.query.customerId)}, { $pull: { items : {productId: ObjectId(req.query.productId) }}}, {multi: true}).then(data=>{
-    res.json("deleted")
+  await Cart.findOneAndUpdate({customerId : ObjectId(req.customer)}, { $pull: { items : {productId: ObjectId(req.query.productId) }}}, {multi: true}).then(data=>{
+    res.json(data)
   })
   }
   catch(err){
@@ -161,13 +158,13 @@ const deleteFromCart = async(req, res) => {
   };
   const updateQuantity=async function(req,res){
     try{
-        const cart=await Cart.findOne({customerId:req.query.customerId})
+        const cart=await Cart.findOne({customerId:req.customer})
         console.log(cart)
         //quant=Number(cart.quantity)
         //console.log(typeof (quant))
         //quantity=Number(quant+Number(req.query.add))
         //total=(quantity*cart.discountedCost)
-        if(cart.customerId==req.query.customerId){
+        if(cart.customerId==req.customer){
                 await Cart.updateOne( { 'items.productId': req.query.productId},
             {$set:{'items.$.quantity':req.query.add,'items.$.total':parseInt(Number.parseInt(req.query.add)*parseInt(cart.discountedCost))}}).then(result=>{
            //data.save()
@@ -185,8 +182,17 @@ const deleteFromCart = async(req, res) => {
 }
 const emptyCart=async function(req,res){
         try{
-            await Cart.findOneAndDelete({customerId:ObjectId(req.query.customerId)}).then((data)=>{
-                res.json("Successfully Deleted!");
+            await Cart.findOneAndDelete({customerId:ObjectId(req.customer)}).then((data)=>{
+                if(data){
+                    res.send({
+                        "response":"Successfully Deleted!",
+                        "data":data
+                     } );
+                }
+                else{
+                    res.json("Already Empty!")
+                }
+               
             })
         }
         catch(err){

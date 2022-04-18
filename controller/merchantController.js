@@ -3,6 +3,16 @@ const {merchantProfile,ObjectId}=require('../model/merchantProfile');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const getMerchant=async(req,res)=>{
+    await merchantProfile.find().then((data)=>{
+        if(data){
+            res.json(data)
+        }
+        else{
+            res.json("No merchant is present.Please add merchant!")
+        }
+    })
+}
 const addProfile = async(req,res)=>
 {
 //var salt = bcrypt.genSaltSync(10);
@@ -79,7 +89,8 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
                         {
                             const token =jwt.sign({
                                 //name:data[0].name,
-                                email:data[0].email,
+                                //email:data[0].email,
+                                id:data[0]._id
                             },
                             privateKey,
                             {
@@ -130,7 +141,7 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
 const getProfile=async function(req,res){
     try
     {
-        await merchantProfile.findOne({_id:ObjectId(req.query.merchantId)}).then((data)=>{
+        await merchantProfile.findById(req.merchant).then((data)=>{
             if(data)
             //console.log(data);
                 res.json(data);
@@ -156,7 +167,7 @@ const getProfile=async function(req,res){
 const updateProfile=async function(req,res){
     try
     {
-        await merchantProfile.findOne({_id:ObjectId(req.query.merchantId)}).then(async (data)=>{
+        await merchantProfile.findById(req.merchant).then(async (data)=>{
             if(data)
             {
                 if(!req.body.email)
@@ -208,7 +219,7 @@ const updateProfile=async function(req,res){
 const deleteProfile=async function(req,res){
     try
     {
-        await merchantProfile.deleteOne({_id:ObjectId(req.query.merchantId)}).then((result)=>{
+        await merchantProfile.findByIdAndDelete(req.merchant).then((result)=>{
             if(result)
                 res.json(result);
             else
@@ -224,5 +235,6 @@ module.exports={
         loginProfile,
         getProfile,
         updateProfile,
-        deleteProfile
+        deleteProfile,
+        getMerchant
     }

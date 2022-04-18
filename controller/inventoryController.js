@@ -2,6 +2,8 @@ const bodyparser=require('body-parser');
 const {Product,ObjectProductId}=require('../model/product');
 const {merchantProfile,ObjectId}=require('../model/merchantProfile');
 const {Category,ObjectCategoryId}=require('../model/category');
+const asyncWrapper=require('../middleware/async');
+const { createCustomError } = require('../error/customError')
 
 const getAllProduct=async function(req,res){
     try
@@ -16,6 +18,8 @@ const getAllProduct=async function(req,res){
             previous="null"
         }
         await Product.find()
+        .populate('brand')
+        .populate('category')
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((result)=>{
@@ -59,8 +63,8 @@ const getAllProduct=async function(req,res){
     if(req.query.search){
         query.$or=[
             { "productName" : { $regex: req.query.search, $options: 'i' } },
-            { "brandName" : { $regex: req.query.search, $options: 'i' } },
-            { "categoryName" : { $regex: req.query.search, $options: 'i' } },
+            { "brand" : { $regex: req.query.search, $options: 'i' } },
+            { "category" : { $regex: req.query.search, $options: 'i' } },
             { "shortDescription" : { $regex: req.query.search, $options: 'i' } },
             { "longDescription" : { $regex: req.query.search, $options: 'i' } },
         ];
@@ -68,7 +72,8 @@ const getAllProduct=async function(req,res){
     
     Product
         .find(query)
-        .populate(req.query.filter)
+        .populate('brand')
+        .populate('category')
         .sort({[req.query.key]:req.query.value})
         .skip((perPage * page) - perPage)
         .limit(perPage)
@@ -106,6 +111,8 @@ const getAllProduct=async function(req,res){
         //     }
             
           await Product.find({_id:ObjectId(req.query.productId)})
+          .populate('brand')
+          .populate('category')
           
             // .skip((perPage * page) - perPage)
             // .limit(perPage)
@@ -145,7 +152,10 @@ const getAllProduct=async function(req,res){
         //     previous="null"
         // }
         
-          await Product.find({MerchantId:(req.query.merchantId)})
+          await Product.find({MerchantId:req.merchant})
+          .populate('brand')
+        .populate('category')
+          
             // .skip((perPage * page) - perPage)
             // .limit(perPage)
             .then((data)=>{
@@ -170,10 +180,59 @@ const getAllProduct=async function(req,res){
           res.status(401).json({data:err.message});
       }
     }
-
+const showProductToCustomer=asyncWrapper(async(req,res)=>{
+    const product=await Product.find();
+    let perPage = 3
+        let page = Number(req.query.page) || 1
+        if(page>1){
+            next=page+1
+            previous=page-1
+        }
+        else{
+            next=page+1
+            previous="null"
+        }
+        let query={};
+        if(req.query.search){
+            query.$or=[
+                { "productName" : { $regex: req.query.search, $options: 'i' } },
+                { "brand" : { $regex: req.query.search, $options: 'i' } },
+                { "category" : { $regex: req.query.search, $options: 'i' } },
+                { "shortDescription" : { $regex: req.query.search, $options: 'i' } },
+                { "longDescription" : { $regex: req.query.search, $options: 'i' } },
+            ];
+        }
+    await Product.find(query)
+    .select({"productName":1,"shortDescription":1,"longDescription":1,"baseCost":1,"discount":1,"discountedCost":1,"brand":1,"_id":0})
+    .populate({
+        path:'brand',
+        select:{"brandName":1,"_id":0}
+    })
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
+    .then(async(data)=>{
+        if(data){
+            res.status(200).send ({
+                "status": "true",
+                "msg": "Record found.",
+                "response": data,
+                "code":200,
+                "error": {
+                },
+                current: page,
+                next:next,
+                previous:previous
+            })
+        }
+        else{
+            return next(createCustomError(`No product is available to show `, 404))
+        }
+    })
+})
 module.exports={
         getProductByMerchant,
         getProductByID,
         getProduct,
-        getAllProduct
+        getAllProduct,
+        showProductToCustomer
 }

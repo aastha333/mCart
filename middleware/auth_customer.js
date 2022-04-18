@@ -7,13 +7,15 @@ require("dotenv").config()
 var JWT = async (req,res,next)=>{
 var token = req.headers.authorization
 
-const user=jwt.verify(token,privateKey,function(err,decoded){
+jwt.verify(token,privateKey,function(err,decoded){
     if(err){
               res.send("invalid token")
     ;}else{
+        //console.log(decoded)
+        req.customer = decoded.id;
         next();
     }
 })
-req.user=user;
+//req.user=user;
 }
 module.exports={JWT}

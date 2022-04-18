@@ -7,7 +7,7 @@ const { Order } = require('../model/order');
 const getPayment=async function(req,res){
     try
     {
-        await Payment.findOne({customerId:req.query.customerId}).then((result)=>{
+        await Payment.findOne({customerId:req.customer}).then((result)=>{
             if(result)
                 res.json(result);
             else
@@ -22,7 +22,7 @@ const getPayment=async function(req,res){
 
 const addPayment=async function(req,res){
     try{
-        await customerProfile.findOne({_id:ObjectId(req.query.customerId)}).then(async (data)=>
+        await customerProfile.findOne({_id:ObjectId(req.customer)}).then(async (data)=>
        {
            if(data)
            {
@@ -50,8 +50,8 @@ const addPayment=async function(req,res){
                     paymentId:paymentId
                 })
                 //console.log(name);
-                await payment.save().then(()=>{
-                    res.end('Data Saved!');
+                await payment.save().then((data)=>{
+                    res.end(data);
                 })
             }
             else
@@ -114,15 +114,18 @@ const deletePayment=async(req,res)=>{
     }
 const makePayment=async(req,res)=>{
     try{
-        await Order.findOne({_id:ObjectId(req.query.orderId)},{customerId:req.query.customerId}).then(async(data)=>{
+        await Order.findOne({_id:ObjectId(req.query.orderId)}).then(async(data)=>{
+            //console.log(data);
             if(data&&data.status=='Payment Incomplete'){
-                await Payment.findOne({paymentId:req.query.paymentId},{customerId:req.query.customerId}).then((result)=>{
+                await Payment.findOne({paymentId:req.query.paymentId},{customerId:req.customer}).then((result)=>{
                     if(result){ 
                      let transactionid = crypto.randomBytes(6).toString('hex');
                      data.transactionId=transactionid;
                      data.status='Ordered'
-                     data.save().then(()=>{
-                         res.json("Paid")
+                     data.save().then((data)=>{
+                         res.send(
+                             {response:"Payment successful",
+                             data:data})
                          //res.json(out)
                      })
                     }

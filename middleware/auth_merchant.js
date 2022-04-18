@@ -11,6 +11,7 @@ jwt.verify(token,privateKey,function(err,decoded){
     if(err){
               res.send("invalid token")
     ;}else{
+        req.merchant = decoded.id;
         next();
     }
 })

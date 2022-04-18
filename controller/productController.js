@@ -8,7 +8,7 @@ const { Brand ,ObjectBrandId} = require('../model/brand');
 
 const addProduct=async function(req,res){  
     try
-    {   await merchantProfile.findOne({_id:ObjectId(req.query.merchantId)},{"firstName":1,"lastName":1}).then(async (data)=>{
+    {   await merchantProfile.findById(req.merchant).then(async (data)=>{
         await Brand.findOne({_id:ObjectId(req.query.brandId),categoryId:req.query.categoryId}).then(()=>{
                 if(data)
                 {
@@ -44,9 +44,9 @@ const addProduct=async function(req,res){
                     longDescription:req.body.longDescription,
                     quantity:quantity,
                    
-                    categoryId:req.query.categoryId,
+                    category:req.query.categoryId,
                     //currency:req.body.currency,
-                    brandId:req.query.brandId,
+                    brand:req.query.brandId,
                     size:req.body.size,
                     available:available,
                     createdAt:req.body.createdAt,
@@ -96,7 +96,7 @@ const updateProduct=async function(req,res){
     try
     {
      
-        await Product.findOne({_id:ObjectId(req.query.productId)},{"productName":1}).then(async (data)=>{
+        await Product.findOne({MerchantId:req.merchant},{_id:ObjectId(req.query.productId)},{"productName":1}).then(async (data)=>{
             if(data)
             {      
                 data.productName=req.body.productName,
@@ -155,7 +155,7 @@ const updateProduct=async function(req,res){
 const deleteProduct=async function(req,res){
     try
     {
-        await Product.deleteOne({_id:ObjectId(req.query.productId)}).then((result)=>{
+        await Product.deleteOne({MerchantId:req.merchant},{_id:ObjectId(req.query.productId)}).then((result)=>{
             if(result)
             res.status(200).send ({
                 "status": "true",

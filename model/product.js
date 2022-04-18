@@ -1,7 +1,8 @@
 const mongoose=require("mongoose")
 const { ObjectProductId } = mongoose.Types;
 const {merchantProfile,ObjectId}=require('../model/merchantProfile');
-const {Category,ObjectCategoryId} =require('../model/category')
+const {Category,ObjectCategoryId} =require('../model/category');
+const {Brand,ObjectBrandId}=require('../model/brand')
 
 const productSchema = new mongoose.Schema({
     
@@ -35,11 +36,11 @@ const productSchema = new mongoose.Schema({
         type:Number,
         min:0
     },
-    brandId:{
+    brand:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Brand'
     },
-    categoryId:{
+    category:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Category'
     },
@@ -68,6 +69,6 @@ const productSchema = new mongoose.Schema({
 //ObjectId=ObjectProductId;
 module.exports=
 {
-    Product:mongoose.model("product",productSchema),
+    Product:mongoose.model("Product",productSchema),
     ObjectProductId
 }

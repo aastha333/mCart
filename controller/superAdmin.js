@@ -5,16 +5,21 @@ var bodyParser = require('body-parser')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 //const { find } = require('lodash')
-// const getAdmin = (req,res)=>
-// {
-//     res.status(200).json({
-//         message :"user route working"
-//     })
-// }
+const getAdmin = async(req,res)=>
+{
+    await Admin.find().then((data)=>{
+        res.status(200).json({
+            data
+        })
+    })
+   
+}
+
 const addAdmin = async(req,res)=>
 {
-//var salt = bcrypt.genSaltSync(10);
-bcrypt.hash(req.body.password,10,(err,hash)=>
+    await Admin.findOne({role:'Super Admin'}).then(async(data)=>{
+        if(!data){
+            bcrypt.hash(req.body.password,10,(err,hash)=>
 {
     if(err)
     {
@@ -44,6 +49,13 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
         }
         })
     }
+    else{
+        res.json("Can't add more than one super admin")
+    }
+
+    })
+}
+
     const loginAdmin = (req,res)=>
     {
         Admin.find({  email:req.body.email})
@@ -67,8 +79,10 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
                         if(result)
                         {
                             const token =jwt.sign({
-                                //name:data[0].name,
-                                email:data[0].email,
+                                
+                                id:data[0]._id,
+                                
+                                
                             },
                             privateKey  , 
                             {
@@ -76,7 +90,8 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
                             }
                             );
                             res.status(200).json({
-                                email:data[0].email,
+                                id:data[0]._id,
+                               
                                 token:token
                             })
                         }
@@ -91,7 +106,6 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
                 })
     }
     const updateAdmin = async (req, res) => {
-       
                 var pass;
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, 10, async function (err, hash) {
@@ -102,7 +116,7 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
                 } else {
                     pass = hash;
                     // console.log(pass)
-                     await Admin.findOneAndUpdate({ _id: req.query.adminId },
+                     await Admin.findOneAndUpdate({ _id: req.admin },
                         {
                             $set: {
                                 name: req.body.name,
@@ -125,11 +139,11 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
     }
     const deleteAdmin=async(req,res)=>{
         try{
-            await Admin.findOne({_id:ObjectId(req.query.adminId)}).then(async(data)=>{
+            await Admin.findOne({_id:ObjectId(req.admin)}).then(async(data)=>{
                 var Role=data.role;
                 console.log(Role)
                 if(Role!='Super Admin'){
-                    await Admin.deleteOne({_id:ObjectId(req.query.adminId)}).then((result)=>{
+                    await Admin.deleteOne({_id:ObjectId(req.admin)}).then((result)=>{
                         res.json(result)
                     })
                 }
@@ -142,11 +156,20 @@ bcrypt.hash(req.body.password,10,(err,hash)=>
             res.json(err)
         }
     }
+    const getById=async(req,res)=>{
+        await Admin.findById(req.admin,{password:0}).then((admin)=>{
+            //if (err) return res.status(500).send("There was a problem finding the user.");
+            if (!admin) return res.status(404).send("No user found.");
+  
+            res.status(200).send(admin);
+        })
+    }
     
 module.exports = {
-    //getAdmin,
+    getById,
     addAdmin,
     loginAdmin,
     updateAdmin,
-    deleteAdmin
+    deleteAdmin,
+    getAdmin
 }
