@@ -3,7 +3,9 @@ const {Product,ObjectProductId}=require('../model/product');
 const {merchantProfile,ObjectId}=require('../model/merchantProfile');
 const {Category,ObjectCategoryId}=require('../model/category');
 const asyncWrapper=require('../middleware/async');
-const { createCustomError } = require('../error/customError')
+const { createCustomError } = require('../error/customError');
+const { UserBindingList } = require('twilio/lib/rest/ipMessaging/v2/service/user/userBinding');
+const customerProfile = require('../model/customerProfile');
 
 const getAllProduct=async function(req,res){
     try
@@ -59,21 +61,78 @@ const getAllProduct=async function(req,res){
         previous="null"
     }
     
-    let query={};
-    if(req.query.search){
-        query.$or=[
-            { "productName" : { $regex: req.query.search, $options: 'i' } },
-            { "brand" : { $regex: req.query.search, $options: 'i' } },
-            { "category" : { $regex: req.query.search, $options: 'i' } },
-            { "shortDescription" : { $regex: req.query.search, $options: 'i' } },
-            { "longDescription" : { $regex: req.query.search, $options: 'i' } },
-        ];
-    }
+    let use=[
+        {$lookup:
+        {
+         from: "categories",
+         localField: "category",
+         foreignField: "_id",
+         as: "Category"
+        }
+    },
+    {$unwind: '$Category'},
+    {
+        $lookup:
+        {
+            from:'brands',
+            localField:'brand',
+            foreignField:"_id",
+            as:"Brand"
+
+        }
+    },
+    {$unwind:"$Brand"}
+   ]
+   if(req.query.search && req.query.search!=''){ 
+    use.push({
+      $match: { 
+        $or :[
+          {productName : { $regex: req.query.search,$options:'i' } },
+          {'Category.categoryName' : { $regex: req.query.search,$options:'i' }},
+          {'Brand.brandName' : { $regex: req.query.search,$options:'i' } },
+          {shortDescription:{$regex:req.query.search,$options:'i'}},
+          {longDescription:{$regex:req.query.search,$options:'i'}}
+        ]
+      }
+    });
+}
+
+if(req.query.category){		
+    use.push({
+        $match: { 
+            'Category.categoryName':req.query.category,
+        }	
+    });
+}
+
+if(req.query.brand){		
+    use.push({
+        $match: { 
+            'Brand.brandName':req.query.brand,
+        }	
+    });
+}
+
+    // if(req.query.filter){
+    //     use.category=req.query.filter
+    // }
+    // if(req.query.search){
+    //     use.$or=[
+    //         { "productName" : { $regex: req.query.search, $options: 'i' } },
+    //         //{ "brand" : { $regex: req.query.search, $options: 'i' } },
+    //         //{ "category.categoryName" : { $regex: req.query.search, $options: 'i' } },
+    //         { "shortDescription" : { $regex: req.query.search, $options: 'i' } },
+    //         { "longDescription" : { $regex: req.query.search, $options: 'i' } },
+    //     ];
+    // }
+    
+    
     
     Product
-        .find(query)
-        .populate('brand')
-        .populate('category')
+        .aggregate(use)
+        //.project(projection)
+        //.populate('brand')
+        //.populate('category')
         .sort({[req.query.key]:req.query.value})
         .skip((perPage * page) - perPage)
         .limit(perPage)
@@ -229,10 +288,34 @@ const showProductToCustomer=asyncWrapper(async(req,res)=>{
         }
     })
 })
+const show =async(req,res)=>{
+    try{
+        //const customer=req.customer
+        //const product=await Product.find();
+        await merchantProfile.find({blocked:req.customer}).then(async(data)=>{
+            if(!data){
+                await Product.find().then((result)=>{
+                    res.json(result)
+                })
+            }
+            else{
+                await Product.find({MerchantId:{$nin:data}}).then((result)=>{
+                    res.json(result)
+                })
+            }
+            
+        })
+    }
+    catch(err){
+        res.json(err)
+    }
+    
+}
 module.exports={
         getProductByMerchant,
         getProductByID,
         getProduct,
         getAllProduct,
-        showProductToCustomer
+        showProductToCustomer,
+        show
 }

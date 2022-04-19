@@ -25,6 +25,7 @@ router.post('/addCustomer',jsonEncoder,customer.addCustomer);
  router.delete('/deleteCustomer',jsonEncoder,auth.JWT,customer.deleteCustomer);
  router.get('/getCustomer',jsonEncoder,customer.getCustomer);
  router.get('/showProductToCustomer',jsonEncoder,auth.JWT,inventory.showProductToCustomer);
+ router.get('/show',jsonEncoder,auth.JWT,inventory.show);
 
 
 

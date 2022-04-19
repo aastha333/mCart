@@ -16,4 +16,5 @@ router.put('/updateProduct',jsonEncoder,auth.JWT,product.updateProduct);
 router.delete('/deleteProduct',jsonEncoder,auth.JWT,product.deleteProduct);
 router.get('/getProductByMerchant',jsonEncoder,auth.JWT,inventory.getProduct);
 
+
 module.exports=router;

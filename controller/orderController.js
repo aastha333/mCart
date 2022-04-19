@@ -37,7 +37,7 @@ const orderProduct=async(req,res)=>{
                 var status='Payment Incomplete';
                 //var status='Ordered'
                 const orderdata={
-                customerId:customerId,
+                customer:customerId,
                 items:item,
                     
                 status:status,
@@ -139,7 +139,8 @@ const cancelOrder=async(req,res)=>{
     }
 }
 const orderHistory=async(req,res)=>{
-    await Order.findOne({customerId:req.customer}).then((data)=>{
+    await Order.find({customer:req.customer})
+    .then((data)=>{
         if(data){
             res.json(data)
         }

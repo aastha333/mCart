@@ -91,7 +91,11 @@ const merchantProfileSchema = new mongoose.Schema({
     },
     token:{
         type:String
-    }
+    },
+    blocked:[{
+            type:mongoose.Schema.Types.ObjectId,
+            ref: "customerProfile",
+    }]
 })
 
 module.exports=

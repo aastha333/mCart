@@ -17,6 +17,8 @@ router.post('/loginProfile',jsonEncoder,profile.loginProfile);
 router.get('/getProfileById',jsonEncoder,Auth.JWT,profile.getProfile);
 router.put('/updateProfile',jsonEncoder,Auth.JWT,profile.updateProfile );
 router.delete('/deleteProfile',jsonEncoder,Auth.JWT,profile.deleteProfile );
+router.put('/blockCustomer',jsonEncoder,Auth.JWT,profile.blockCustomer );
+router.put('/unblockCustomer',jsonEncoder,Auth.JWT,profile.unblockCustomer );
 
 //  router.post('/addCustomer',jsonEncoder,customer.addCustomer);
 //  router.post('/loginCustomer',jsonEncoder,customer.loginCustomer);

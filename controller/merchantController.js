@@ -2,6 +2,7 @@ const bodyparser=require('body-parser');
 const {merchantProfile,ObjectId}=require('../model/merchantProfile');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { is } = require('express/lib/request');
 
 const getMerchant=async(req,res)=>{
     await merchantProfile.find().then((data)=>{
@@ -230,11 +231,39 @@ const deleteProfile=async function(req,res){
         res.status(401).json({data:error.message});
     }
 }
+const blockCustomer=async(req,res)=>{
+    await merchantProfile.findByIdAndUpdate(req.merchant,{$push:{blocked:req.query.customerId}}).then((data)=>{
+        // if(data){
+            
+        // }
+        // else{
+
+        // }
+        responseObj = {
+            "status": "success",
+            "msg": "Record found.",
+            "body": data
+        }
+        res.status(200).send(responseObj)
+    })
+}
+const unblockCustomer=async(req,res)=>{
+    await merchantProfile.findByIdAndUpdate(req.merchant,{$pull:{blocked:req.query.customerId}}).then((data)=>{
+        responseObj = {
+            "status": "success",
+            "msg": "Record found.",
+            "body": data
+        }
+        res.status(200).send(responseObj)
+    })
+}
 module.exports={
         addProfile,
         loginProfile,
         getProfile,
         updateProfile,
         deleteProfile,
-        getMerchant
+        getMerchant,
+        blockCustomer,
+        unblockCustomer
     }

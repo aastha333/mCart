@@ -17,16 +17,18 @@ const productSchema = new mongoose.Schema({
 
     discountedCost:{
         type:Number,
-        required:true
+        //required:true
     },
     discount:{
-        type:Number
+        type:Number,
+        required:true
     },
     shortDescription:{
         type:String,
         minlength:10,
-        maxlength:100
-    },
+        maxlength:100,
+        required:true
+        },
     longDescription:{
         type:String,
         minlength:50,
