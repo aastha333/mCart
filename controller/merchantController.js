@@ -2,7 +2,7 @@ const bodyparser=require('body-parser');
 const {merchantProfile,ObjectId}=require('../model/merchantProfile');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { is } = require('express/lib/request');
+//const { is } = require('express/lib/request');
 
 const getMerchant=async(req,res)=>{
     await merchantProfile.find().then((data)=>{

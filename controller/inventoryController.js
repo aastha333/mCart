@@ -290,15 +290,194 @@ const showProductToCustomer=asyncWrapper(async(req,res)=>{
 })
 const show =async(req,res)=>{
     try{
-        //const customer=req.customer
-        //const product=await Product.find();
         await merchantProfile.find({blocked:req.customer}).then(async(data)=>{
+            //console.log(data)
             if(!data){
-                await Product.find().then((result)=>{
-                    res.json(result)
-                })
+                console.log('bblalabla');
+                let perPage = 3
+            let page = Number(req.query.page) || 1
+            if(page>1){
+                next=page+1
+                previous=page-1
             }
             else{
+                next=page+1
+                previous="null"
+            }
+            
+            let use=[
+                {$lookup:
+                {
+                 from: "categories",
+                 localField: "category",
+                 foreignField: "_id",
+                 as: "Category"
+                }
+            },
+            {$unwind: '$Category'},
+            {
+                $lookup:
+                {
+                    from:'brands',
+                    localField:'brand',
+                    foreignField:"_id",
+                    as:"Brand"
+        
+                }
+            },
+            {$unwind:"$Brand"}
+           ]
+           if(req.query.search && req.query.search!=''){ 
+            use.push(
+                
+                {
+              $match: { 
+                $or :[
+                  {productName : { $regex: req.query.search,$options:'i' } },
+                  {'Category.categoryName' : { $regex: req.query.search,$options:'i' }},
+                  {'Brand.brandName' : { $regex: req.query.search,$options:'i' } },
+                  {shortDescription:{$regex:req.query.search,$options:'i'}},
+                  {longDescription:{$regex:req.query.search,$options:'i'}}
+                ]
+              }
+            });
+        }
+        
+        
+        if(req.query.category){		
+            use.push({
+                $match: { 
+                    'Category.categoryName':req.query.category,
+                }	
+            });
+        }
+        
+        if(req.query.brand){		
+            use.push({
+                $match: { 
+                    'Brand.brandName':req.query.brand,
+                }	
+            });
+        }
+            Product
+            .aggregate(use)
+            //.project(projection)
+            //.populate('brand')
+            //.populate('category')
+            .sort({[req.query.key]:req.query.value})
+            .skip((perPage * page) - perPage)
+            .limit(perPage)
+            .exec(function (err, docs)  {
+                res.status(200).send ({
+                    "status": "true",
+                    "msg": "Record found.",
+                    "response": docs,
+                    "code":200,
+                    "error": {
+                    },
+                    //"msg": "Successfully authorized",
+                    current: page,
+                    next:next,
+                    previous:previous
+                    
+                })
+            })
+            }
+            else{
+            //     let perPage = 3
+            //     let page = Number(req.query.page) || 1
+            //     if(page>1){
+            //         next=page+1
+            //         previous=page-1
+            //     }
+            //     else{
+            //         next=page+1
+            //         previous="null"
+            //     }
+            
+            //     let use=[
+            //         // {$match:{
+            //         //     'MerchantId':{$nin:data}
+            //         // }},
+            //         {$lookup:
+            //         {
+            //         from: "categories",
+            //         localField: "category",
+            //         foreignField: "_id",
+            //         as: "Category"
+            //         }
+            //     },
+            //     {$unwind: '$Category'},
+            //     {
+            //         $lookup:
+            //         {
+            //         from:'brands',
+            //         localField:'brand',
+            //         foreignField:"_id",
+            //         as:"Brand"
+        
+            //         }
+            //     },
+            //     {$unwind:"$Brand"}
+            //     ]
+                
+            //     if(req.query.search && req.query.search!=''){ 
+            //     use.push(
+            //         {
+            //         $match: { 
+            //         $or :[
+            //       {productName : { $regex: req.query.search,$options:'i' } },
+            //       {'Category.categoryName' : { $regex: req.query.search,$options:'i' }},
+            //       {'Brand.brandName' : { $regex: req.query.search,$options:'i' } },
+            //       {shortDescription:{$regex:req.query.search,$options:'i'}},
+            //       {longDescription:{$regex:req.query.search,$options:'i'}}
+            //     ]
+            //     }
+            //     });
+            // }
+        
+        
+            // if(req.query.category){		
+            //     use.push({
+            //         $match: { 
+            //             'Category.categoryName':req.query.category,
+            //         }	
+            //     });
+            // }
+        
+            // if(req.query.brand){		
+            // use.push({
+            //     $match: { 
+            //         'Brand.brandName':req.query.brand,
+            //     }	
+            // });
+            // }
+            
+            
+            // Product
+            // .find({MerchantId:{$nin:data}})
+            // .aggregate(use)
+            // //.project(projection)
+            // //.populate('brand')
+            // //.populate('category')
+            // .sort({[req.query.key]:req.query.value})
+            // .skip((perPage * page) - perPage)
+            // .limit(perPage)
+            // .exec(function (err, docs)  {
+            //     res.status(200).send ({
+            //         "status": "true",
+            //         "msg": "Record found.",
+            //         "response": docs,
+            //         "code":200,
+            //         "error": {
+            //         },
+            //         //"msg": "Successfully authorized",
+            //         current: page,
+            //         next:next,
+            //         previous:previous
+                    
+            //     })
+            // })
                 await Product.find({MerchantId:{$nin:data}}).then((result)=>{
                     res.json(result)
                 })
